@@ -1,0 +1,2 @@
+# JGA_Krummenacher
+Planning
