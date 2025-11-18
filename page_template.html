@@ -22,7 +22,7 @@
         .tab-content.active{ display:block }
         .calendar-day{ background:#fff;border:1px solid #d1d5db;border-radius:0.5rem;overflow:hidden; display:flex; flex-direction:column; }
         .day-header{ background:#f9fafb;padding:.75rem 1rem;border-bottom:1px solid #d1d5db; flex-shrink:0; }
-        .timeline-wrapper{ position:relative; --hour-height:60px; --minute-height:calc(var(--hour-height)/60); height:calc(28*var(--hour-height)); background:#f9fafb; flex-grow:1; }
+        .timeline-wrapper{ position:relative; --hour-height:60px; --minute-height:calc(var(--hour-height)/60); height:calc(24*var(--hour-height)); background:#f9fafb; flex-grow:1; }
         
         /* Events & Blocks */
         .hour-line{ height:var(--hour-height); border-bottom:1px solid #e5e7eb; display:flex; align-items:flex-start }
@@ -141,12 +141,12 @@
                         </div>
                         <div>
                             <div class="bg-gray-50 p-4 rounded border border-gray-200">
-                                <div class="flex justify-between text-sm"><span>Villa:</span><strong id="summaryVilla">0.00 CHF</strong></div>
-                                <div class="flex justify-between text-sm"><span>Flights:</span><strong id="summaryFlights">0.00 CHF</strong></div>
-                                <div class="flex justify-between text-sm"><span>Food:</span><strong id="summaryFood">0.00 CHF</strong></div>
-                                <div class="flex justify-between text-sm"><span>Party:</span><strong id="summaryParty">0.00 CHF</strong></div>
-                                <div class="flex justify-between text-sm"><span>Taxis:</span><strong id="summaryTaxis">0.00 CHF</strong></div>
-                                <div class="flex justify-between text-sm"><span>VIP:</span><strong id="summaryVIP">0.00 CHF</strong></div>
+                                <div class="flex justify-between text-sm mb-2"><span>Villa:</span><strong id="summaryVilla">0.00 CHF</strong></div>
+                                <div class="flex justify-between text-sm mb-2"><span>Flights:</span><strong id="summaryFlights">0.00 CHF</strong></div>
+                                <div class="flex justify-between text-sm mb-2"><span>Food:</span><strong id="summaryFood">0.00 CHF</strong></div>
+                                <div class="flex justify-between text-sm mb-2"><span>Party:</span><strong id="summaryParty">0.00 CHF</strong></div>
+                                <div class="flex justify-between text-sm mb-2"><span>Taxis:</span><strong id="summaryTaxis">0.00 CHF</strong></div>
+                                <div class="flex justify-between text-sm mb-2"><span>VIP:</span><strong id="summaryVIP">0.00 CHF</strong></div>
                                 <hr class="my-4" />
                                 <div class="text-center"><div class="text-sm text-gray-500">TOTAL</div><div id="totalCostDisplay" class="text-2xl font-bold text-green-600">0.00 CHF</div></div>
                                 <div class="text-center mt-2"><div class="text-sm text-gray-500">PER HEAD (12)</div><div id="costPerHeadDisplay" class="text-xl font-bold text-blue-600">0.00 CHF</div></div>
@@ -247,8 +247,10 @@
         }
 
         function calculateBudget() {
-            const fmt = v => isNaN(v) ? '0.00 CHF' : v.toLocaleString('de-CH', { style: 'currency', currency: 'CHF' });
+            const fmt = v => isNaN(v) ? '0.00 CHF' : v.toLocaleString('de-CH', { style: 'currency', currency: 'CHF', minimumFractionDigits: 0, maximumFractionDigits: 0 });
             
+            const groupSize = currentTrip.groupSize || 12;
+
             // 1. Get Villa Cost
             const checkedRadio = document.querySelector('input[name="villa_radio"]:checked');
             const villaCost = checkedRadio ? parseFloat(checkedRadio.value) : 0;
@@ -264,16 +266,20 @@
 
             let total = villaCost;
             
+            // Update Villa Summary Line
+            document.getElementById('summaryVilla').innerText = `${fmt(villaCost)} (${fmt(villaCost/groupSize)})`;
+
+            // Loop through other costs
             for (const [inputId, summaryId] of Object.entries(idMap)) {
                 const val = parseFloat(document.getElementById(inputId).value) || 0;
                 total += val;
                 const summaryEl = document.getElementById(summaryId);
-                if(summaryEl) summaryEl.innerText = fmt(val);
+                if(summaryEl) summaryEl.innerText = `${fmt(val)} (${fmt(val/groupSize)})`;
             }
 
-            document.getElementById('summaryVilla').innerText = fmt(villaCost);
+            // Totals
             document.getElementById('totalCostDisplay').innerText = fmt(total);
-            const perHead = total / (currentTrip.groupSize || 12);
+            const perHead = total / groupSize;
             document.getElementById('costPerHeadDisplay').innerText = fmt(perHead);
         }
 
@@ -299,7 +305,7 @@
         }
 
         /* --- BOILERPLATE --- */
-        function createHourLines(c=28){ let s=''; for(let i=0;i<c;i++) s+=`<div class="hour-line"><div class="hour-label">${String(i%24).padStart(2,'0')}:00</div></div>`; return s;}
+        function createHourLines(c=24){ let s=''; for(let i=0;i<c;i++) s+=`<div class="hour-line"><div class="hour-label">${String(i%24).padStart(2,'0')}:00</div></div>`; return s;}
         function formatTime(m){ return String(Math.floor(m/60)%24).padStart(2,'0')+':'+String(m%60).padStart(2,'0'); }
         function timeToMin(s){ const p=s.split(':'); return p.length===2 ? parseInt(p[0])*60+parseInt(p[1]) : null; }
 
