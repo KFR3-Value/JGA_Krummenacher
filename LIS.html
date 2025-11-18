@@ -1,0 +1,424 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Krummenacher's JGA | Lisbon 2026</title>
+    
+    <script src="https://cdn.tailwindcss.com"></script>
+    
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+        }
+        
+        /* Custom styles for active tab */
+        .tab-btn.active {
+            border-bottom: 2px solid #2563EB; /* blue-600 */
+            color: #1E40AF; /* blue-800 */
+            font-weight: 600;
+        }
+        
+        /* Hide non-active tab content */
+        .tab-content {
+            display: none;
+        }
+        .tab-content.active {
+            display: block;
+        }
+
+        /* Timeline styles */
+        .timeline-grid {
+            display: grid;
+            /* 24 rows, each 40px high */
+            grid-template-rows: repeat(24, 40px); 
+        }
+
+        .timeline-hour {
+            height: 40px;
+            border-top: 1px dashed #D1D5DB; /* gray-300 */
+            position: relative;
+        }
+        
+        .timeline-hour:first-child {
+            border-top: none;
+        }
+
+        .hour-label {
+            position: absolute;
+            top: -0.5em; /* Adjust to sit on the line */
+            left: -10px; /* Pulls it left of the column */
+            font-size: 0.75rem; /* 12px */
+            color: #6B7280; /* gray-500 */
+            background-color: #F9FAFB; /* bg-gray-50 */
+            padding: 0 4px;
+        }
+
+        .event-block {
+            position: absolute;
+            left: 5%;  /* Give it some space from the edge */
+            right: 5%;
+            width: 90%;
+            z-index: 10;
+            overflow: hidden;
+            border-left: 4px solid;
+        }
+    </style>
+</head>
+
+<body class="bg-gray-100 text-gray-900 p-4 md:p-8">
+
+    <div class="max-w-screen-xl mx-auto bg-white shadow-2xl rounded-lg overflow-hidden">
+        
+        <header class="p-6 md:p-8 border-b-2 border-gray-200">
+            <h1 class="text-3xl md:text-4xl font-bold text-blue-700">Krummenacher's JGA | 30.7 - 2.8.2026</h1>
+            <div class="mt-4">
+                <h3 class="text-lg font-semibold mb-2 text-gray-800">Key Planning Assumptions</h3>
+                <ul class="list-disc list-inside space-y-1 text-gray-700">
+                    <li><strong>Flights:</strong> <a href="https://www.google.com/travel/flights/s/KVk9aCzjjiKw5MhDA" target="_blank" class="text-blue-600 hover:underline">Group Booking Link (Total: 5500)</a></li>
+                    <li><strong>Location:</strong> Lisbon, Portugal</li>
+                    <li><strong>Group Size:</strong> 12 people</li>
+                </ul>
+            </div>
+        </header>
+
+        <nav class="flex space-x-4 md:space-x-6 px-6 md:px-8 border-b border-gray-200">
+            <button class="tab-btn active py-4 px-1 text-gray-600 hover:text-gray-900" onclick="showTab('agenda', this)">Agenda</button>
+            <button class="tab-btn py-4 px-1 text-gray-600 hover:text-gray-900" onclick="showTab('venues', this)">Party Venues</button>
+            <button class="tab-btn py-4 px-1 text-gray-600 hover:text-gray-900" onclick="showTab('budget', this)">Budget</button>
+        </nav>
+
+        <main class="p-6 md:p-8">
+
+            <div id="agenda" class="tab-content active">
+                <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+                    
+                    <div class="bg-gray-50 p-4 rounded-lg">
+                        <h4 class="text-xl font-semibold mb-3 text-center">Day 1: Thursday, 30 July</h4>
+                        <div class="relative timeline-grid bg-white rounded shadow-inner p-2">
+                            <script>
+                                for (let i = 0; i < 24; i++) {
+                                    document.write(`<div class="timeline-hour"><span class="hour-label">${i.toString().padStart(2, '0')}:00</span></div>`);
+                                }
+                            </script>
+                            
+                            <div class="event-block bg-blue-100 border-blue-500 p-2 rounded text-sm shadow"
+                                 style="top: calc(15 * 40px); height: calc(2 * 40px);"
+                                 title="Arrival (LIS) & Transfer (15:00 - 17:00)">
+                                <strong>15:00</strong> Arrival (LIS) & Transfer
+                            </div>
+                            <div class="event-block bg-green-100 border-green-500 p-2 rounded text-sm shadow"
+                                 style="top: calc(17 * 40px); height: calc(2 * 40px);"
+                                 title="Check-in & Settle (17:00 - 19:00)">
+                                <strong>17:00</strong> Check-in & First Beers
+                            </div>
+                            <div class="event-block bg-yellow-100 border-yellow-500 p-2 rounded text-sm shadow"
+                                 style="top: calc(19.5 * 40px); height: calc(2 * 40px);"
+                                 title="Dinner @ Time Out Market (19:30 - 21:30)">
+                                <strong>19:30</strong> Dinner: Time Out Market
+                            </div>
+                            <div class="event-block bg-purple-100 border-purple-500 p-2 rounded text-sm shadow"
+                                 style="top: calc(22 * 40px); height: calc(4 * 40px);"
+                                 title="Bairro Alto Bar Hop (22:00 - 02:00)">
+                                <strong>22:00</strong> Bairro Alto Bar Hop
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="bg-gray-50 p-4 rounded-lg">
+                        <h4 class="text-xl font-semibold mb-3 text-center">Day 2: Friday, 31 July</h4>
+                        <div class="relative timeline-grid bg-white rounded shadow-inner p-2">
+                            <script>
+                                for (let i = 0; i < 24; i++) {
+                                    document.write(`<div class="timeline-hour"><span class="hour-label">${i.toString().padStart(2, '0')}:00</span></div>`);
+                                }
+                            </script>
+                            
+                            <div class="event-block bg-yellow-100 border-yellow-500 p-2 rounded text-sm shadow"
+                                 style="top: calc(10 * 40px); height: calc(1 * 40px);"
+                                 title="Group Breakfast / Coffee (10:00 - 11:00)">
+                                <strong>10:00</strong> Group Breakfast
+                            </div>
+                            <div class="event-block bg-teal-100 border-teal-500 p-2 rounded text-sm shadow"
+                                 style="top: calc(11.5 * 40px); height: calc(4.5 * 40px);"
+                                 title="Activity: Surf Lesson @ Carcavelos (11:30 - 16:00)">
+                                <strong>11:30</strong> Activity: Surf Lesson
+                            </div>
+                             <div class="event-block bg-green-100 border-green-500 p-2 rounded text-sm shadow"
+                                 style="top: calc(16 * 40px); height: calc(3 * 40px);"
+                                 title="Relax / Shower / Pre-game (16:00 - 19:00)">
+                                <strong>16:00</strong> Relax / Pre-game
+                            </div>
+                            <div class="event-block bg-yellow-100 border-yellow-500 p-2 rounded text-sm shadow"
+                                 style="top: calc(19.5 * 40px); height: calc(2 * 40px);"
+                                 title="Dinner @ Ponto Final (19:30 - 21:30)">
+                                <strong>19:30</strong> Dinner (Ponto Final)
+                            </div>
+                            <div class="event-block bg-purple-100 border-purple-500 p-2 rounded text-sm shadow"
+                                 style="top: calc(22 * 40px); height: calc(1.5 * 40px);"
+                                 title="Drinks @ Park Rooftop Bar (22:00 - 23:30)">
+                                <strong>22:00</strong> Drinks: Park (Rooftop)
+                            </div>
+                            <div class="event-block bg-red-100 border-red-500 p-2 rounded text-sm shadow"
+                                 style="top: calc(23.5 * 40px); height: calc(4.5 * 40px);"
+                                 title="Pink Street: Pensão Amor & MusicBox (23:30 - 04:00)">
+                                <strong>23:30</strong> Party: Pink Street
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="bg-gray-50 p-4 rounded-lg">
+                        <h4 class="text-xl font-semibold mb-3 text-center">Day 3: Saturday, 1 Aug</h4>
+                        <div class="relative timeline-grid bg-white rounded shadow-inner p-2">
+                            <script>
+                                for (let i = 0; i < 24; i++) {
+                                    document.write(`<div class="timeline-hour"><span class="hour-label">${i.toString().padStart(2, '0')}:00</span></div>`);
+                                }
+                            </script>
+                            
+                            <div class="event-block bg-yellow-100 border-yellow-500 p-2 rounded text-sm shadow"
+                                 style="top: calc(11 * 40px); height: calc(1.5 * 40px);"
+                                 title="Late Breakfast / Recovery (11:00 - 12:30)">
+                                <strong>11:00</strong> Late Breakfast
+                            </div>
+                            <div class="event-block bg-teal-100 border-teal-500 p-2 rounded text-sm shadow"
+                                 style="top: calc(14 * 40px); height: calc(4 * 40px);"
+                                 title="Main Event: Private Boat Party (14:00 - 18:00)">
+                                <strong>14:00</strong> Main Event: Boat Party
+                            </div>
+                            <div class="event-block bg-yellow-100 border-yellow-500 p-2 rounded text-sm shadow"
+                                 style="top: calc(20 * 40px); height: calc(2.5 * 40px);"
+                                 title="'Last Supper' @ Sala de Corte (20:00 - 22:30)">
+                                <strong>20:00</strong> "Last Supper" Steakhouse
+                            </div>
+                            <div class="event-block bg-red-100 border-red-500 p-2 rounded text-sm shadow"
+                                 style="top: calc(23.5 * 40px); height: calc(5.5 * 40px);"
+                                 title="Main Club Night: Lux Frágil (23:30 - 05:00)">
+                                <strong>23:30</strong> Main Club: Lux Frágil
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="bg-gray-50 p-4 rounded-lg">
+                        <h4 class="text-xl font-semibold mb-3 text-center">Day 4: Sunday, 2 Aug</h4>
+                        <div class="relative timeline-grid bg-white rounded shadow-inner p-2">
+                            <script>
+                                for (let i = 0; i < 24; i++) {
+                                    document.write(`<div class="timeline-hour"><span class="hour-label">${i.toString().padStart(2, '0')}:00</span></div>`);
+                                }
+                            </script>
+                            
+                            <div class="event-block bg-yellow-100 border-yellow-500 p-2 rounded text-sm shadow"
+                                 style="top: calc(10.5 * 40px); height: calc(1.5 * 40px);"
+                                 title="Check-out & Recovery Brunch (10:30 - 12:00)">
+                                <strong>10:30</strong> Check-out & Brunch
+                            </div>
+                            <div class="event-block bg-blue-100 border-blue-500 p-2 rounded text-sm shadow"
+                                 style="top: calc(12 * 40px); height: calc(1.5 * 40px);"
+                                 title="Transfer to Airport (12:00 - 13:30)">
+                                <strong>12:00</strong> Transfer to Airport
+                            </div>
+                            <div class="event-block bg-blue-100 border-blue-500 p-2 rounded text-sm shadow"
+                                 style="top: calc(14 * 40px); height: calc(2 * 40px);"
+                                 title="Flights Home (14:00 onwards)">
+                                <strong>14:00</strong> Flights Home
+                            </div>
+                        </div>
+                    </div>
+
+                </div>
+            </div> <div id="venues" class="tab-content space-y-6">
+                <h3 class="text-2xl font-semibold">Nightlife Plan</h3>
+                <p>A suggested plan to hit the best spots, starting casual and ending big.</p>
+                
+                <div class="bg-gray-50 p-4 rounded-lg shadow-sm">
+                    <h4 class="text-xl font-bold text-gray-800">Night 1 (Thursday): Bairro Alto Bar Hop</h4>
+                    <p class="mt-2 text-gray-700">The classic Lisbon experience. We'll start with sunset drinks at a rooftop bar before diving into the chaos.</p>
+                    <ul class="list-disc list-inside mt-3 space-y-1 text-gray-700">
+                        <li><strong>20:00 - 22:00:</strong> Sunset drinks at <strong>Park</strong>. It's on top of a car park and has amazing views. Great warmup.</li>
+                        <li><strong>22:00 onwards:</strong> Head to <strong>Bairro Alto</strong>. It's not about one bar, it's about hundreds. Grab caipirinhas from street windows, hop between tiny bars, and join the massive party in the streets.</li>
+                    </ul>
+                </div>
+                
+                <div class="bg-gray-50 p-4 rounded-lg shadow-sm">
+                    <h4 class="text-xl font-bold text-gray-800">Night 2 (Friday): Pink Street (Rua Nova do Carvalho)</h4>
+                    <p class="mt-2 text-gray-700">The iconic photo-op and a concentrated strip of serious bars and clubs.</p>
+                    <ul class="list-disc list-inside mt-3 space-y-1 text-gray-700">
+                        <li><strong>23:00 - 01:00:</strong> Start at <strong>Pensão Amor</strong>. It's an old brothel turned into a quirky, burlesque-themed bar. Very unique vibe.</li>
+                        <li><strong>01:00 onwards:</strong> Move to <strong>MusicBox</strong> (right on Pink Street) for live music or DJs, or explore the other clubs on the strip.</li>
+                    </ul>
+                </div>
+
+                <div class="bg-gray-50 p-4 rounded-lg shadow-sm">
+                    <h4 class="text-xl font-bold text-gray-800">Night 3 (Saturday): The Main Event</h4>
+                    <p class="mt-2 text-gray-700">This is the night for Lisbon's most famous club. It requires more effort but is legendary.</p>
+                    <ul class="list-disc list-inside mt-3 space-y-1 text-gray-700">
+                        <li><strong>01:30 onwards:</strong> <strong>Lux Frágil</strong>. This is *the* spot. It's a bit further out (Santa Apolónia), so we'll need Ubers.
+                            <ul class="list-circle list-inside ml-5 mt-1 text-sm">
+                                <li><strong>Door Policy:</strong> Be prepared. No large, rowdy groups. Dress smart-casual (no shorts/jerseys). We should try to arrive in smaller groups of 3-4.</li>
+                                <li><strong>Vibe:</strong> Multi-story warehouse with a rooftop terrace. International DJs, proper techno/house.</li>
+                            </ul>
+                        </li>
+                        <li><strong>Backup Plan:</strong> If Lux is a no-go or the vibe isn't right, we can divert to <strong>K Urban Beach</strong>. It's a large, more commercial "beach club" with a pool. Easier entry for a big group.</li>
+                    </ul>
+                </div>
+            </div> <div id="budget" class="tab-content">
+                <div class="grid grid-cols-1 lg:grid-cols-2 gap-8">
+                    
+                    <div class="space-y-6">
+                        <h3 class="text-2xl font-semibold">Inputs</h3>
+                        
+                        <div>
+                            <label class="block font-medium text-gray-700">Apartment / Villa (Total)</label>
+                            <div class="flex gap-6 mt-2">
+                                <label class="flex items-center"><input type="radio" name="apartment" value="2500" class="form-radio h-4 w-4 text-blue-600" onchange="calculateBudget()" checked> <span class="ml-2">Option 1: CHF 2'500.00</span></label>
+                                <label class="flex items-center"><input type="radio" name="apartment" value="4000" class="form-radio h-4 w-4 text-blue-600" onchange="calculateBudget()"> <span class="ml-2">Option 2: CHF 4'000.00</span></label>
+                            </div>
+                        </div>
+                        
+                        <div class="space-y-4">
+                            <div>
+                                <label for="flights" class="block font-medium text-gray-700">Flights (Total)</label>
+                                <input type="number" id="flights" value="5500" readonly class="w-full mt-1 p-3 border border-gray-300 rounded-md bg-gray-100 focus:outline-none">
+                            </div>
+                            
+                            <div>
+                                <label for="food" class="block font-medium text-gray-700">Food & Beverages (at Villa)</label>
+                                <input type="number" id="food" value="800" class="w-full mt-1 p-3 border border-gray-300 rounded-md focus:ring-blue-500 focus:border-blue-500" onchange="calculateBudget()">
+                            </div>
+                            
+                            <div>
+                                <label for="party" class="block font-medium text-gray-700">Party Fund (Tables, Dinners, Clubs)</label>
+                                <input type="number" id="party" value="3000" class="w-full mt-1 p-3 border border-gray-300 rounded-md focus:ring-blue-500 focus:border-blue-500" onchange="calculateBudget()">
+                            </div>
+                            
+                            <div>
+                                <label for="taxis" class="block font-medium text-gray-700">Taxis / Transport Fund</label>
+                                <input type="number" id="taxis" value="600" class="w-full mt-1 p-3 border border-gray-300 rounded-md focus:ring-blue-500 focus:border-blue-500" onchange="calculateBudget()">
+                            </div>
+
+                            <div>
+                                <label for="vip" class="block font-medium text-gray-700">"VIP" Fund (Strippers)</label>
+                                <input type="number" id="vip" value="1000" class="w-full mt-1 p-3 border border-gray-300 rounded-md focus:ring-blue-500 focus:border-blue-500" onchange="calculateBudget()">
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="space-y-6 bg-gray-50 p-6 rounded-lg">
+                        <h3 class="text-2xl font-semibold">Summary</h3>
+                        
+                        <ul class="space-y-3 text-lg">
+                            <li class="flex justify-between border-b pb-2">
+                                <span class_="text-gray-600">Apartment:</span> 
+                                <strong id="summary-apartment" class="font-medium">CHF 0.00</strong>
+                            </li>
+                            <li class="flex justify-between border-b pb-2">
+                                <span class_="text-gray-600">Flights:</span> 
+                                <strong id="summary-flights" class="font-medium">CHF 0.00</strong>
+                            </li>
+                            <li class="flex justify-between border-b pb-2">
+                                <span class_="text-gray-600">Food & Bev:</span> 
+                                <strong id="summary-food" class="font-medium">CHF 0.00</strong>
+                            </li>
+                            <li class="flex justify-between border-b pb-2">
+                                <span class_="text-gray-600">Party Fund:</span> 
+                                <strong id="summary-party" class="font-medium">CHF 0.00</strong>
+                            </li>
+                            <li class="flex justify-between border-b pb-2">
+                                <span class_="text-gray-600">Taxis / Transport:</span> 
+                                <strong id="summary-taxis" class="font-medium">CHF 0.00</strong>
+                            </li>
+                            <li class="flex justify-between border-b pb-2">
+                                <span class_="text-gray-600">"VIP" Fund:</span> 
+                                <strong id="summary-vip" class="font-medium text-pink-600">CHF 0.00</strong>
+                            </li>
+                        </ul>
+                        
+                        <hr class="my-4">
+                        
+                        <div class="bg-blue-100 p-4 rounded-lg text-center">
+                            <span class="text-lg font-medium text-blue-800">TOTAL TRIP COST</span>
+                            <h4 class="text-4xl font-bold text-blue-900" id="summary-total">CHF 0.00</h4>
+                        </div>
+                        
+                        <div class="bg-green-100 p-4 rounded-lg text-center">
+                            <span class="text-lg font-medium text-green-800">COST PER HEAD (12 People)</span>
+                            <h4 class="text-4xl font-bold text-green-900" id="summary-per-head">CHF 0.00</h4>
+                        </div>
+                    </div>
+                </div>
+            </div> </main>
+    </div>
+
+    <script>
+        /**
+         * Tab Navigation
+         */
+        function showTab(tabId, clickedButton) {
+            // Hide all tab contents
+            const contents = document.querySelectorAll('.tab-content');
+            contents.forEach(content => content.classList.remove('active'));
+            
+            // Deactivate all tab buttons
+            const buttons = document.querySelectorAll('.tab-btn');
+            buttons.forEach(button => button.classList.remove('active'));
+            
+            // Show the selected tab content
+            document.getElementById(tabId).classList.add('active');
+            
+            // Activate the clicked button
+            clickedButton.classList.add('active');
+        }
+
+        /**
+         * Budget Calculation
+         */
+        function calculateBudget() {
+            // Helper to format currency
+            const formatCHF = (value) => {
+                if (isNaN(value)) value = 0;
+                return value.toLocaleString('de-CH', { 
+                    style: 'currency', 
+                    currency: 'CHF',
+                    minimumFractionDigits: 2,
+                    maximumFractionDigits: 2
+                });
+            };
+            
+            // 1. Get all input values
+            const apartment = parseFloat(document.querySelector('input[name="apartment"]:checked').value) || 0;
+            const flights = parseFloat(document.getElementById('flights').value) || 0;
+            const food = parseFloat(document.getElementById('food').value) || 0;
+            const party = parseFloat(document.getElementById('party').value) || 0;
+            const taxis = parseFloat(document.getElementById('taxis').value) || 0;
+            const vip = parseFloat(document.getElementById('vip').value) || 0;
+            
+            const groupSize = 12;
+
+            // 2. Calculate totals
+            const totalCost = apartment + flights + food + party + taxis + vip;
+            const costPerHead = totalCost / groupSize;
+            
+            // 3. Update summary fields
+            document.getElementById('summary-apartment').innerText = formatCHF(apartment);
+            document.getElementById('summary-flights').innerText = formatCHF(flights);
+            document.getElementById('summary-food').innerText = formatCHF(food);
+            document.getElementById('summary-party').innerText = formatCHF(party);
+            document.getElementById('summary-taxis').innerText = formatCHF(taxis);
+            document.getElementById('summary-vip').innerText = formatCHF(vip);
+            
+            // 4. Update main totals
+            document.getElementById('summary-total').innerText = formatCHF(totalCost);
+            document.getElementById('summary-per-head').innerText = formatCHF(costPerHead);
+        }
+        
+        // Run on page load
+        document.addEventListener('DOMContentLoaded', calculateBudget);
+
+    </script>
+</body>
+</html>

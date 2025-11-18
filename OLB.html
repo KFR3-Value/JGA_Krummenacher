@@ -1,0 +1,740 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sardinia 2026: Bachelor Party Agenda</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;900&display=swap" rel="stylesheet">
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #f3f4f6; /* Use a light gray, similar to Outlook */
+        }
+        .calendar-day {
+            background-color: #ffffff;
+            border: 1px solid #d1d5db; /* border-gray-300 */
+            border-radius: 0.5rem; /* rounded-lg */
+            overflow: hidden;
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+        }
+        .day-header {
+            background-color: #f9fafb; /* bg-gray-50 */
+            border-bottom: 1px solid #d1d5db;
+            padding: 0.75rem 1rem; /* p-3 p-4 */
+        }
+        .day-title {
+            font-weight: 700;
+            font-size: 1.25rem; /* text-xl */
+            color: #1f2937; /* text-gray-900 */
+        }
+        .day-subtitle {
+            font-size: 0.875rem; /* text-sm */
+            color: #4b5563; /* text-gray-600 */
+        }
+        
+        /* 24-Hour Timeline Styles */
+        .timeline-wrapper {
+            position: relative;
+            --hour-height: 50px;
+            --minute-height: calc(var(--hour-height) / 60);
+            height: calc(24 * var(--hour-height));
+            background-color: #f9fafb; /* bg-gray-50 for the timeline bg */
+        }
+        .hour-lines {
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            display: flex;
+            flex-direction: column;
+        }
+        .hour-line {
+            height: var(--hour-height);
+            border-bottom: 1px solid #e5e7eb; /* border-gray-200 */
+            flex-shrink: 0;
+            display: flex;
+            align-items: flex-start;
+        }
+        .hour-line:last-child {
+            border-bottom: none;
+        }
+        .hour-label {
+            padding: 0.25rem 0.5rem;
+            font-size: 0.75rem; /* text-xs */
+            color: #9ca3af; /* text-gray-400 */
+            font-weight: 500;
+            width: 4rem; /* w-16 */
+            text-align: right;
+        }
+        .event-block {
+            position: absolute;
+            left: 4.5rem; /* w-16 + 0.5rem padding */
+            right: 0.5rem;
+            background-color: #fff;
+            border: 1px solid #e5e7eb;
+            border-left-width: 4px;
+            border-radius: 0.375rem; /* rounded-md */
+            padding: 0.5rem 0.75rem;
+            overflow: hidden;
+            transition: background-color 0.2s ease-in-out;
+            cursor: default;
+        }
+        .event-block:hover {
+            opacity: 0.9;
+        }
+        .event-block h3 {
+            font-weight: 600;
+            color: #1f2937;
+            font-size: 0.875rem;
+        }
+        .event-block p {
+            font-size: 0.75rem;
+            color: #6b7280;
+        }
+        .party-slot {
+            background-color: #fef9c3; /* bg-yellow-50 */
+            border-color: #f59e0b; /* border-yellow-500 */
+        }
+        .party-slot h3 { color: #b45309; }
+        .travel-slot {
+            background-color: #e0f2fe; /* bg-blue-50 */
+            border-color: #3b82f6; /* border-blue-500 */
+        }
+        .travel-slot h3 { color: #1e40af; }
+        .chill-slot {
+            background-color: #e0fbf0; /* bg-green-50 */
+            border-color: #10b981; /* border-green-500 */
+        }
+        .chill-slot h3 { color: #047857; }
+        .food-slot {
+            background-color: #ffe4e6; /* bg-red-50 */
+            border-color: #ef4444; /* border-red-500 */
+        }
+        .food-slot h3 { color: #b91c1c; }
+
+        /* Tab Styles */
+        .tab-button {
+            padding: 0.5rem 1rem;
+            font-weight: 600;
+            border-radius: 0.5rem;
+            cursor: pointer;
+            transition: all 0.2s;
+            color: #374151; /* text-gray-700 */
+        }
+        .tab-button.active {
+            background-color: #ffffff;
+            color: #3b82f6; /* text-blue-600 */
+            box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.1), 0 1px 2px 0 rgba(0, 0, 0, 0.06);
+        }
+        .tab-button:not(.active):hover {
+            background-color: #e5e7eb; /* bg-gray-200 */
+        }
+        .tab-content {
+            display: none;
+        }
+        .tab-content.active {
+            display: block;
+        }
+        /* Style for Airbnb embeds */
+        .embed-container {
+            background-color: #fff;
+            border-radius: 0.5rem;
+            padding: 1.5rem;
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+            border: 1px solid #d1d5db;
+        }
+        .embed-container.recommended {
+            border: 4px solid #3b82f6; /* border-blue-600 */
+        }
+        .embed-container h3 {
+            font-size: 1.25rem;
+            font-weight: 700;
+            margin-bottom: 0.5rem;
+        }
+        .embed-container .airbnb-embed-frame {
+            width: 100% !important;
+            height: 300px !important;
+            margin: 0 auto !important;
+        }
+        /* Map Styles */
+        .map-container {
+            background-color: #fff;
+            border-radius: 0.5rem;
+            padding: 1.5rem;
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+            border: 1px solid #d1d5db;
+        }
+        .map-container h3 {
+            font-size: 1.25rem;
+            font-weight: 700;
+            margin-bottom: 1rem;
+        }
+        .map-iframe-wrapper {
+            position: relative;
+            overflow: hidden;
+            width: 100%;
+            padding-top: 75%; /* 4:3 aspect ratio */
+            border-radius: 0.5rem;
+        }
+        .map-iframe-wrapper iframe {
+            position: absolute;
+            top: 0;
+            left: 0;
+            bottom: 0;
+            right: 0;
+            width: 100%;
+            height: 100%;
+            border: 0;
+        }
+        
+        /* Budget Styles */
+        .budget-container {
+            background-color: #fff;
+            border-radius: 0.5rem;
+            padding: 1.5rem;
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+            border: 1px solid #d1d5db;
+        }
+        .budget-input-group label {
+            display: block;
+            font-weight: 500;
+            color: #374151;
+            margin-bottom: 0.5rem;
+        }
+        .budget-input {
+            width: 100%;
+            padding: 0.5rem 0.75rem;
+            border: 1px solid #d1d5db;
+            border-radius: 0.375rem;
+            box-shadow: inset 0 1px 2px 0 rgba(0, 0, 0, 0.05);
+        }
+        .budget-input:focus {
+            outline: 2px solid #3b82f6;
+            outline-offset: -1px;
+            border-color: #3b82f6;
+        }
+        .budget-radio-label {
+            display: flex;
+            align-items: center;
+            padding: 0.75rem;
+            border: 1px solid #d1d5db;
+            border-radius: 0.5rem;
+            cursor: pointer;
+        }
+        .budget-radio-label:has(input:checked) {
+            background-color: #e0f2fe;
+            border-color: #3b82f6;
+        }
+        .budget-radio-label input {
+            margin-right: 0.5rem;
+        }
+        .summary-box {
+            background-color: #f9fafb;
+            border: 1px solid #e5e7eb;
+            border-radius: 0.5rem;
+            padding: 1.5rem;
+        }
+        .summary-box .total-label {
+            font-size: 1.125rem;
+            font-weight: 600;
+            color: #1f2937;
+        }
+        .summary-box .total-value {
+            font-size: 2.25rem;
+            font-weight: 800;
+            color: #16a34a; /* green-600 */
+        }
+        .summary-box .per-head-value {
+            font-size: 2.25rem;
+            font-weight: 800;
+            color: #3b82f6; /* blue-600 */
+        }
+
+    </style>
+</head>
+<body class="p-6 md:p-10">
+
+    <div class="max-w-screen-xl mx-auto">
+        <!-- Header -->
+        <div class="text-left mb-8">
+            <h1 class="text-4xl md:text-5xl font-extrabold text-gray-900 tracking-tight">
+                Sardinia 2026: Bachelor Party Agenda
+            </h1>
+            <p class="mt-2 text-xl text-gray-600">Krummenacher's JGA | 30.7.2026 - 2.8.2026</p>
+        </div>
+
+        <!-- Planning Assumptions -->
+        <div class="mb-8 p-5 bg-white rounded-lg shadow border border-gray-200">
+            <h2 class="text-lg font-bold text-gray-900 mb-2">Key Planning Assumptions</h2>
+            <ul class="list-disc list-inside text-gray-700 space-y-1">
+                <li><strong>✈️ Flights:</strong> <a href="https://www.google.com/travel/flights/s/iuFqMEP3SZSTh5VX9" target="_blank" class="text-blue-600 hover:underline">Group Booking Link</a></li>
+                <li><span class="font-semibold">📍 Location:</span> Villa near <strong>Porto Cervo / Baja Sardinia</strong>.
+                <li><span class="font-semibold">🚕 Transport:</span> <strong>Taxis / Pre-booked Transfers only.</strong> (Need 3-4 taxis for all 12 guys).</li>
+            </ul>
+        </div>
+
+        <!-- Tab Navigation -->
+        <div class="mb-6 p-1 bg-gray-100 rounded-lg inline-flex flex-wrap">
+            <button id="agendaTab" class="tab-button active">Agenda</button>
+            <button id="villaTab" class="tab-button">Villa Options</button>
+            <button id="mapTab" class="tab-button">Map & Locations</button>
+            <button id="partyTab" class="tab-button">Party Venues</button>
+            <button id="activitiesTab" class="tab-button">Activities</button>
+            <button id="budgetTab" class="tab-button">Budget</button>
+        </div>
+
+        <!-- Tab Content: Agenda -->
+        <div id="agendaContent" class="tab-content active">
+            <!-- 4-Day Calendar -->
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+                <!-- DAY 1: THURSDAY, 30.7 - THE ARRIVAL -->
+                <div class="calendar-day">
+                    <div class="day-header">
+                        <h2 class="day-title">Thursday, 30 July</h2>
+                        <p class="day-subtitle">THE ARRIVAL</p>
+                    </div>
+                    <div class="timeline-wrapper">
+                        <!-- Hour Markers -->
+                        <div class="hour-lines">
+                            <script>
+                                (function() {
+                                    let content = '';
+                                    for (let i = 0; i < 24; i++) {
+                                        content += `
+                                            <div class="hour-line">
+                                                <div class="hour-label">${i.toString().padStart(2, '0')}:00</div>
+                                            </div>
+                                        `;
+                                    }
+                                    document.querySelector('#agendaContent .grid > div:nth-child(1) .hour-lines').innerHTML = content;
+                                })();
+                            </script>
+                        </div>
+                        <!-- Event Blocks -->
+                        <div class="event-block travel-slot" style="top: calc((17 * 60) * var(--minute-height)); height: calc(55 * var(--minute-height));" title="17:00 - 17:55: Arrive at Zurich Airport.">
+                            <h3>Journey to ZRH Airport</h3><p>Meet the group.</p>
+                        </div>
+                        <div class="event-block travel-slot" style="top: calc((17 * 60 + 55) * var(--minute-height)); height: calc(90 * var(--minute-height));" title="17:55 - 19:25: 1.5h before takeoff. Get bags dropped, go through security, and find the gate.">
+                            <h3>Check-in</h3><p>Bags, security, pre-flight beer.</p>
+                        </div>
+                        <div class="event-block travel-slot" style="top: calc((19 * 60 + 25) * var(--minute-height)); height: calc(90 * var(--minute-height));" title="19:25 - 20:55: Flight ZRH ➡️ OLB.">
+                            <h3>FLIGHT (EasyJet)</h3><p>Wheels up.</p>
+                        </div>
+                        <div class="event-block travel-slot" style="top: calc((20 * 60 + 55) * var(--minute-height)); height: calc(60 * var(--minute-height));" title="20:55 - 21:55: Land, get bags, organize 3-4 taxis, and drive to the villa.">
+                            <h3>Arrival & Taxi to Villa</h3><p>Get bags, taxis, and drive.</p>
+                        </div>
+                        <div class="event-block food-slot" style="top: calc((21 * 60 + 55) * var(--minute-height)); height: calc(120 * var(--minute-height));" title="21:55 - 23:55: Get keys, drop bags, order pizza/food, and have the first drinks.">
+                            <h3>Check-in Villa, Dinner and pre-game</h3><p>Claim beds, food, first rounds.</p>
+                        </div>
+                        <div class="event-block party-slot" style="top: calc((23 * 60 + 55) * var(--minute-height)); height: calc(245 * var(--minute-height));" title="23:55 - 04:00: Taxis to the 'castle-discoteca'. Arrive late, as it only gets going after midnight.">
+                            <h3>Party night at the Ritual Club</h3><p>Main club night. Go hard.</p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- DAY 2: FRIDAY, 31.7 - THE MARATHON -->
+                <div class="calendar-day">
+                    <div class="day-header">
+                        <h2 class="day-title">Friday, 31 July</h2>
+                        <p class="day-subtitle">THE MARATHON (Party Day)</p>
+                    </div>
+                    <div class="timeline-wrapper">
+                        <div class="hour-lines">
+                            <script>
+                                (function() {
+                                    let content = '';
+                                    for (let i = 0; i < 24; i++) {
+                                        content += `
+                                            <div class="hour-line">
+                                                <div class="hour-label">${i.toString().padStart(2, '0')}:00</div>
+                                            </div>
+                                        `;
+                                    }
+                                    document.querySelector('#agendaContent .grid > div:nth-child(2) .hour-lines').innerHTML = content;
+                                })();
+                            </script>
+                        </div>
+                        <div class="event-block" style="top: calc((10 * 60) * var(--minute-height)); height: calc(90 * var(--minute-height));" title="10:00 - 11:30: Team 1 (4 guys) takes taxis to a supermarket for the weekend's supplies. Team 2 chills.">
+                            <h3>Operation: Supply Run</h3><p>Team 1 (Supplies), Team 2 (Chill).</p>
+                        </div>
+                        <div class="event-block chill-slot" style="top: calc((11 * 60 + 30) * var(--minute-height)); height: calc(210 * var(--minute-height));" title="11:30 - 15:00: Everyone at the villa. Cook a late brunch / first BBQ. Relax by the pool.">
+                            <h3>Villa Brunch & Pool Time</h3><p>Brunch, swim, music, recover.</p>
+                        </div>
+                        <div class="event-block" style="top: calc((15 * 60) * var(--minute-height)); height: calc(30 * var(--minute-height));" title="15:00 - 15:30: Start getting ready. Shower, change into beach party gear.">
+                            <h3>Get Ready (Round 1)</h3><p>Prep for Phi Beach.</p>
+                        </div>
+                        <div class="event-block travel-slot" style="top: calc((15 * 60 + 30) * var(--minute-height)); height: calc(30 * var(--minute-height));" title="15:30 - 16:00: Group taxis to Phi Beach. Arrive 'early' (4pm) to secure tables.">
+                            <h3>Move to Phi Beach</h3><p>Get taxis, head to the party.</p>
+                        </div>
+                        <div class="event-block party-slot" style="top: calc((16 * 60) * var(--minute-height)); height: calc(300 * var(--minute-height));" title="16:00 - 21:00: This is the main event. The party builds from 4pm, but the DJ & sunset (18:00-21:00) is the peak.">
+                            <h3>DAY PARTY: PHI BEACH</h3><p>Secure tables for the sunset set.</p>
+                        </div>
+                        <div class="event-block food-slot" style="top: calc((21 * 60) * var(--minute-height)); height: calc(150 * var(--minute-height));" title="21:00 - 23:30: Taxis back to villa. Shower, change, and have a group dinner (at villa or nearby restaurant).">
+                            <h3>Group Dinner & Villa Pre-Game</h3><p>Dinner, shower, power nap.</p>
+                        </div>
+                        <div class="event-block chill-slot" style="top: calc((23 * 60 + 30) * var(--minute-height)); height: calc(120 * var(--minute-height));" title="23:30 onwards: After Ritual last night, this is a chill slot. Head to a local bar or just relax at the villa.">
+                            <h3>Villa / Local Bar (Groom's Choice)</h3><p>Flexible party night.</p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- DAY 3: SATURDAY, 1.8 - THE RECOVERY -->
+                <div class="calendar-day">
+                    <div class="day-header">
+                        <h2 class="day-title">Saturday, 1 Aug</h2>
+                        <p class="day-subtitle">THE RECOVERY (Villa Day)</p>
+                    </div>
+                    <div class="timeline-wrapper">
+                        <div class="hour-lines">
+                            <script>
+                                (function() {
+                                    let content = '';
+                                    for (let i = 0; i < 24; i++) {
+                                        content += `
+                                            <div class="hour-line">
+                                                <div class="hour-label">${i.toString().padStart(2, '0')}:00</div>
+                                            </div>
+                                        `;
+                                    }
+                                    document.querySelector('#agendaContent .grid > div:nth-child(3) .hour-lines').innerHTML = content;
+                                })();
+                            </script>
+                        </div>
+                        <div class="event-block food-slot" style="top: calc((11 * 60) * var(--minute-height)); height: calc(120 * var(--minute-height));" title="11:00 - 13:00: No alarms. Wake up whenever. Use villa supplies for a group brunch.">
+                            <h3>Late Start / Brunch</h3><p>Survivors' brunch at the villa.</p>
+                        </div>
+                        <div class="event-block chill-slot" style="top: calc((13 * 60) * var(--minute-height)); height: calc(240 * var(--minute-height));" title="13:00 - 17:00: Zero plans. Pool, music, sleep, recover from Friday. Or, option to visit a local beach.">
+                            <h3>Villa Pool Day / Boat Trip</h3><p>Relax, swim, or optional boat trip.</p>
+                        </div>
+                        <div class="event-block party-slot" style="top: calc((17 * 60) * var(--minute-height)); height: calc(60 * var(--minute-height));" title="17:00 - 18:00: The 'VIP' event. Private, at the villa. The groom's final 'congratulations'.">
+                            <h3>Groom's "VIP" Send-Off</h3><p>(This is the stripper slot).</p>
+                        </div>
+                        <div class="event-block chill-slot" style="top: calc((18 * 60) * var(--minute-height)); height: calc(120 * var(--minute-height));" title="18:00 - 20:00: Clean up, shower, get ready for a high-quality dinner.">
+                            <h3>Get Ready for Dinner</h3><p>Showers, relax, pre-dinner drinks.</p>
+                        </div>
+                        <div class="event-block food-slot" style="top: calc((20 * 60) * var(--minute-height)); height: calc(180 * var(--minute-height));" title="20:00 - 23:00: Get taxis to a pre-booked restaurant (e.g., in Porto Cervo) for a proper 12-person Italian feast.">
+                            <h3>Big Group Dinner</h3><p>High-quality restaurant.</p>
+                        </div>
+                        <div class="event-block chill-slot" style="top: calc((23 * 60) * var(--minute-height)); height: calc(60 * var(--minute-height));" title="23:00+: Back to the villa. Options: Chill out, or rally for a smaller local bar. No pressure.">
+                            <h3>Villa / Local Bar</h3><p>Chill or rally. Groom's choice.</p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- DAY 4: SUNDAY, 2.8 - PACK & DEPARTURE -->
+                <div class="calendar-day">
+                    <div class="day-header">
+                        <h2 class="day-title">Sunday, 2 Aug</h2>
+                        <p class="day-subtitle">RECOVERY & DEPARTURE</p>
+                    </div>
+                    <div class="timeline-wrapper">
+                        <div class="hour-lines">
+                            <script>
+                                (function() {
+                                    let content = '';
+                                    for (let i = 0; i < 24; i++) {
+                                        content += `
+                                            <div class="hour-line">
+                                                <div class="hour-label">${i.toString().padStart(2, '0')}:00</div>
+                                            </div>
+                                        `;
+                                    }
+                                    document.querySelector('#agendaContent .grid > div:nth-child(4) .hour-lines').innerHTML = content;
+                                })();
+                            </script>
+                        </div>
+                        <div class="event-block chill-slot" style="top: calc((8 * 60 + 30) * var(--minute-height)); height: calc(105 * var(--minute-height));" title="08:30 - 10:15: Wake up call. Coffee. Start packing bags and cleaning the villa.">
+                            <h3>Wake up, Pack & Clean</h3><p>Final breakfast & pack bags.</p>
+                        </div>
+                        <div class="event-block" style="top: calc((10 * 60 + 15) * var(--minute-height)); height: calc(30 * var(--minute-height));" title="10:15 - 10:45: Final clean-up and official villa check-out.">
+                            <h3>Final Check-Out</h3><p>Leave the villa.</p>
+                        </div>
+                        <div class="event-block travel-slot" style="top: calc((10 * 60 + 45) * var(--minute-height)); height: calc(45 * var(--minute-height));" title="10:45 - 11:30: Pre-booked taxis (3-4 of them) arrive. Load bags and drive to Olbia Airport (OLB). Flight is 12:35.">
+                            <h3>Taxis to Airport (OLB)</h3><p>Head to the airport.</p>
+                        </div>
+                        <div class="event-block travel-slot" style="top: calc((11 * 60 + 30) * var(--minute-height)); height: calc(65 * var(--minute-height));" title="11:30 - 12:35: Check-in, get through security, and wait for boarding.">
+                            <h3>Airport Time</h3><p>Security, duty-free.</p>
+                        </div>
+                        <div class="event-block travel-slot" style="top: calc((12 * 60 + 35) * var(--minute-height)); height: calc(95 * var(--minute-height));" title="12:35 - 14:10: Flight OLB ➡️ ZRH. Mission complete.">
+                            <h3>FLIGHT HOME</h3><p>EasyJet (OLB ➡️ ZRH)</p>
+                        </div>
+                    </div>
+                </div>
+            </div> <!-- /grid -->
+        </div>
+
+        <!-- Tab Content: Villa Options -->
+        <div id="villaContent" class="tab-content">
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                
+                <!-- Option 1: RECOMMENDED -->
+                <div class="embed-container recommended">
+                    <h3 class="text-blue-600">Option 1: The Porto Cervo Villa (10 Beds)</h3>
+                    <p class="text-gray-600 mb-4">Price: 9’952 CHF. Best bed ratio (10 beds / 12 guys), perfect location.</p>
+                    <div class="airbnb-embed-frame" data-id="13984569" data-view="home" data-hide-price="true" style="width: 100%; height: 300px; margin: auto;"><a href="https://www.airbnb.ch/rooms/13984569?check_in=2026-07-30&amp;check_out=2026-08-02&amp;guests=1&amp;adults=12&amp;s=66&amp;source=embed_widget">Auf Airbnb ansehen</a><a href="https://www.airbnb.ch/rooms/13984569?check_in=2026-07-30&amp;check_out=2026-08-02&amp;guests=1&amp;adults=12&amp;s=66&amp;source=embed_widget" rel="nofollow">Villa · Arzachena · 6 Schlafzimmer · 10 Betten · 6,5 Bäder</a></div>
+                </div>
+
+                <!-- Option 2: CHEAPEST -->
+                <div class="embed-container">
+                    <h3 class="text-gray-800">Option 2: "Villa Bianca" (8 Beds)</h3>
+                    <p class="text-gray-600 mb-4">Price: 7’551 CHF. Cheapest, but only 8 beds for 12 guys.</p>
+                    <div class="airbnb-embed-frame" data-id="1310299376544480821" data-view="home" data-hide-price="true" style="width: 100%; height: 300px; margin: auto;"><a href="https://www.airbnb.ch/rooms/1310299376544480821?check_in=2026-07-30&amp;check_out=2026-08-02&amp;guests=1&amp;adults=12&amp;s=66&amp;source=embed_widget">Auf Airbnb ansehen</a><a href="https://www.airbnb.ch/rooms/1310299376544480821?check_in=2026-07-30&amp;check_out=2026-08-02&amp;guests=1&amp;adults=12&amp;s=66&amp;source=embed_widget" rel="nofollow">Privatunterkunft · Abbiadori · 6 Schlafzimmer · 8 Betten · 7 Badezimmer</a></div>
+                </div>
+
+                <!-- Option 3: THE BLING -->
+                <div class="embed-container">
+                    <h3 class="text-gray-800">Option 3: "Panoramavilla" (7 Beds)</h3>
+                    <p class="text-gray-600 mb-4">Price: 8’376 CHF. Best pool, but only 7 beds for 12 guys.</p>
+                    <div class="airbnb-embed-frame" data-id="1459460390096881872" data-view="home" data-hide-price="true" style="width: 100%; height: 300px; margin: auto;"><a href="https://www.airbnb.ch/rooms/1459460390096881872?check_in=2026-07-31&amp;check_out=2026-08-02&amp;guests=1&amp;adults=12&amp;s=66&amp;source=embed_widget">Auf Airbnb ansehen</a><a href="https://www.airbnb.ch/rooms/1459460390096881872?check_in=2026-07-31&amp;check_out=2026-08-02&amp;guests=1&amp;adults=12&amp;s=66&amp;source=embed_widget" rel="nofollow">Privatunterkunft · Liscia di Vacca · 6 Schlafzimmer · 7 Betten · 4 Badezimmer</a></div>
+                </div>
+
+            </div>
+        </div>
+
+        <!-- Tab Content: Map -->
+        <div id="mapContent" class="tab-content">
+            <div class="map-container">
+                <h3>Map of Key Locations</h3>
+                <p class="text-gray-600 mb-4">This custom map shows all key locations for the trip: Olbia Airport (OLB), the three villa options, and the two main clubs (Phi Beach & Ritual).</p>
+                <div class="map-iframe-wrapper" style="padding-top: 75%;"> <!-- 4:3 Aspect Ratio -->
+                    <iframe 
+                        src="https://www.google.com/maps/d/embed?mid=1llBgapejXPMItlRJo_1-UfRO9zqiR2A&ehbc=2E312F" 
+                        width="640" 
+                        height="480" 
+                        style="border:0;" 
+                        allowfullscreen="" 
+                        loading="lazy" 
+                        referrerpolicy="no-referrer-when-downgrade">
+                    </iframe>
+                </div>
+            </div>
+        </div>
+
+        <!-- Tab Content: Party Venues -->
+        <div id="partyContent" class="tab-content">
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                <!-- Phi Beach -->
+                <div class="embed-container">
+                    <h3 class="text-gray-800">Day Party: Phi Beach</h3>
+                    <p class="text-gray-600 mb-4">Our target for the Friday sunset party. World-famous beach club. Click below to open their official site in a new tab.</p>
+                    <a href="https://phibeach.com/" target="_blank" class="block w-full text-center bg-blue-600 text-white font-bold py-3 px-5 rounded-lg hover:bg-blue-700 transition mt-6 text-lg">
+                        Open phibeach.com
+                    </a>
+                    <p class="text-xs text-gray-400 mt-4">Note: The website cannot be embedded directly due to its security settings.</p>
+                </div>
+
+                <!-- Ritual Club -->
+                <div class="embed-container">
+                    <h3 class="text-gray-800">Night Club: Ritual Club</h3>
+                    <p class="text-gray-600 mb-4">Our target for the Friday night party. The "castle-discoteca" built into a mountain. Click below to open their official site.</p>
+                    <a href="https://ritual.it/" target="_blank" class="block w-full text-center bg-blue-600 text-white font-bold py-3 px-5 rounded-lg hover:bg-blue-700 transition mt-6 text-lg">
+                        Open ritual.it
+                    </a>
+                    <p class="text-xs text-gray-400 mt-4">Note: The website cannot be embedded directly due to its security settings.</p>
+                </div>
+
+                <!-- NEWLY ADDED: Blu Beach Club -->
+                <div class="embed-container">
+                    <h3 class="text-gray-800">Alternative: Blu Beach Club</h3>
+                    <p class="text-gray-600 mb-4">Another potential venue option. Click below to open their official site.</p>
+                    <a href="https://en.blubeach.club/club" target="_blank" class="block w-full text-center bg-blue-600 text-white font-bold py-3 px-5 rounded-lg hover:bg-blue-700 transition mt-6 text-lg">
+                        Open en.blubeach.club
+                    </a>
+                    <p class="text-xs text-gray-400 mt-4">Note: The website cannot be embedded directly due to its security settings.</p>
+                </div>
+
+                <!-- NEWLY ADDED: Riservato Beach Bar -->
+                <div class="embed-container">
+                    <h3 class="text-gray-800">Alternative: Riservato Beach Bar</h3>
+                    <p class="text-gray-600 mb-4">Another potential venue option. Click below to open their official site.</p>
+                    <a href="https://www.riservatobeachbar.com/?lang=en" target="_blank" class="block w-full text-center bg-blue-600 text-white font-bold py-3 px-5 rounded-lg hover:bg-blue-700 transition mt-6 text-lg">
+                        Open riservatobeachbar.com
+                    </a>
+                    <p class="text-xs text-gray-400 mt-4">Note: The website cannot be embedded directly due to its security settings.</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Tab Content: Activities -->
+        <div id="activitiesContent" class="tab-content">
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                <!-- Boat Rental -->
+                <div class="embed-container">
+                    <h3 class_transform="text-gray-800">Boat Rental (No License Req.)</h3>
+                    <p class="text-gray-600 mb-4">BWA 22 Sport GTO (or similar). Price approx 500 EUR for the day. This is the perfect option for our flexible slot on Saturday afternoon to visit Blu Beach or explore the coast.</p>
+                    <a href="https://www.clickandboat.com/en/boat-rental/olbia/boat-without-licence/bwa-22-sport-gto-kkgw8d8?fromDate=2026-07-31&toDate=2026-07-31" target="_blank" class="block w-full text-center bg-blue-600 text-white font-bold py-3 px-5 rounded-lg hover:bg-blue-700 transition mt-6 text-lg">
+                        View on Click&Boat
+                    </a>
+                    <p class="text-xs text-gray-400 mt-4">Note: Link is for the boat type; exact booking for 2026 needed separately.</p>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Tab Content: Budget -->
+        <div id="budgetContent" class="tab-content">
+            <div class="budget-container">
+                <h3 class="text-xl font-bold text-gray-900 mb-6">Budget Calculator</h3>
+                <div class="grid grid-cols-1 lg:grid-cols-2 gap-8">
+                    
+                    <!-- Input Column -->
+                    <div class="space-y-6">
+                        <!-- Villa Selection -->
+                        <fieldset class="budget-input-group">
+                            <legend class="font-semibold text-lg mb-2">1. Select Villa</legend>
+                            <div class="space-y-3">
+                                <label class="budget-radio-label">
+                                    <input type="radio" name="villa_option" value="9952" checked onchange="calculateBudget()">
+                                    <span><strong>Option 1 (Recommended):</strong> 9’952 CHF (10 beds)</span>
+                                </label>
+                                <label class="budget-radio-label">
+                                    <input type="radio" name="villa_option" value="7551" onchange="calculateBudget()">
+                                    <span><strong>Option 2 (Cheapest):</strong> 7’551 CHF (8 beds)</span>
+                                </label>
+                                <label class="budget-radio-label">
+                                    <input type="radio" name="villa_option" value="8376" onchange="calculateBudget()">
+                                    <span><strong>Option 3 (Bling):</strong> 8’376 CHF (7 beds)</span>
+                                </label>
+                            </div>
+                        </fieldset>
+
+                        <!-- Fixed Costs -->
+                        <div class="budget-input-group">
+                            <label for="flightCost" class="font-semibold text-lg">2. Fixed Costs</label>
+                            <span class="text-sm text-gray-500">Flights (Total for 12 people)</span>
+                            <input type="number" id="flightCost" class="budget-input bg-gray-100" value="4200" readonly>
+                        </div>
+
+                        <!-- Variable Costs -->
+                        <div class="space-y-4">
+                            <h3 class="font-semibold text-lg">3. Variable Costs (Estimates)</h3>
+                            <div class="budget-input-group">
+                                <label for="foodCost">Food & Beverages (at Villa)</label>
+                                <input type="number" id="foodCost" class="budget-input" placeholder="e.g., 1200" oninput="calculateBudget()">
+                            </div>
+                            <div class="budget-input-group">
+                                <label for="partyCost">Party Fund (Tables, Dinners, Clubs)</label>
+                                <input type="number" id="partyCost" class="budget-input" placeholder="e.g., 6000" oninput="calculateBudget()">
+                            </div>
+                            <div class="budget-input-group">
+                                <label for="taxiCost">Taxis / Transport Fund</label>
+                                <input type="number" id="taxiCost" class="budget-input" placeholder="e.g., 600" oninput="calculateBudget()">
+                            </div>
+                            <div class="budget-input-group">
+                                <label for="vipCost">"VIP" Fund (Strippers)</label>
+                                <input type="number" id="vipCost" class="budget-input" placeholder="e.g., 1200" oninput="calculateBudget()">
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Summary Column -->
+                    <div class="space-y-6">
+                        <div class="summary-box space-y-4">
+                            <h3 class="text-lg font-bold text-gray-900 border-b pb-2">Cost Breakdown</h3>
+                            <div class="flex justify-between text-gray-700">
+                                <span>Villa:</span>
+                                <span id="summaryVilla" class="font-semibold">0.00 CHF</span>
+                            </div>
+                            <div class="flex justify-between text-gray-700">
+                                <span>Flights:</span>
+                                <span id="summaryFlights" class="font-semibold">0.00 CHF</span>
+                            </div>
+                            <div class="flex justify-between text-gray-700">
+                                <span>Food/Bev (Villa):</span>
+                                <span id="summaryFood" class="font-semibold">0.00 CHF</span>
+                            </div>
+                            <div class="flex justify-between text-gray-700">
+                                <span>Party Fund:</span>
+                                <span id="summaryParty" class="font-semibold">0.00 CHF</span>
+                            </div>
+                            <div class="flex justify-between text-gray-700">
+                                <span>Taxis:</span>
+                                <span id="summaryTaxis" class="font-semibold">0.00 CHF</span>
+                            </div>
+                            <div class="flex justify-between text-gray-700">
+                                <span>"VIP" Fund:</span>
+                                <span id="summaryVIP" class="font-semibold">0.00 CHF</span>
+                            </div>
+                        </div>
+
+                        <div class="summary-box text-center">
+                            <span class="total-label">TOTAL TRIP COST</span>
+                            <div id="totalCostDisplay" class="total-value">0.00 CHF</div>
+                        </div>
+                        
+                        <div class="summary-box text-center">
+                            <span class="total-label">COST PER HEAD (12 People)</span>
+                            <div id="costPerHeadDisplay" class="per-head-value">0.00 CHF</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+
+    </div> <!-- /max-w-screen-xl -->
+
+    <script>
+        const tabs = [
+            { id: 'agenda', button: document.getElementById('agendaTab'), content: document.getElementById('agendaContent') },
+            { id: 'villa', button: document.getElementById('villaTab'), content: document.getElementById('villaContent') },
+            { id: 'map', button: document.getElementById('mapTab'), content: document.getElementById('mapContent') },
+            { id: 'party', button: document.getElementById('partyTab'), content: document.getElementById('partyContent') },
+            { id: 'activities', button: document.getElementById('activitiesTab'), content: document.getElementById('activitiesContent') },
+            { id: 'budget', button: document.getElementById('budgetTab'), content: document.getElementById('budgetContent') }
+        ];
+
+        tabs.forEach(tab => {
+            tab.button.addEventListener('click', () => {
+                // Deactivate all
+                tabs.forEach(t => {
+                    t.button.classList.remove('active');
+                    t.content.classList.remove('active');
+                });
+                // Activate clicked
+                tab.button.classList.add('active');
+                tab.content.classList.add('active');
+            });
+        });
+
+        // --- BUDGET CALCULATOR SCRIPT ---
+        function calculateBudget() {
+            const numberFormat = (val) => {
+                if (isNaN(val)) return '0.00 CHF'; // Handle NaN
+                return val.toLocaleString('de-CH', { style: 'currency', currency: 'CHF', minimumFractionDigits: 2, maximumFractionDigits: 2 });
+            };
+
+            // 1. Get all values
+            const villaCost = parseFloat(document.querySelector('input[name="villa_option"]:checked').value) || 0;
+            const flightCost = parseFloat(document.getElementById('flightCost').value) || 0;
+            const foodCost = parseFloat(document.getElementById('foodCost').value) || 0;
+            const partyCost = parseFloat(document.getElementById('partyCost').value) || 0;
+            const taxiCost = parseFloat(document.getElementById('taxiCost').value) || 0;
+            const vipCost = parseFloat(document.getElementById('vipCost').value) || 0;
+            
+            // 2. Calculate totals
+            const totalCost = villaCost + flightCost + foodCost + partyCost + taxiCost + vipCost;
+            const costPerHead = totalCost / 12;
+
+            // 3. Update summary list
+            document.getElementById('summaryVilla').textContent = numberFormat(villaCost);
+            document.getElementById('summaryFlights').textContent = numberFormat(flightCost);
+            document.getElementById('summaryFood').textContent = numberFormat(foodCost);
+            document.getElementById('summaryParty').textContent = numberFormat(partyCost);
+            document.getElementById('summaryTaxis').textContent = numberFormat(taxiCost);
+            document.getElementById('summaryVIP').textContent = numberFormat(vipCost);
+
+            // 4. Update main totals
+            document.getElementById('totalCostDisplay').textContent = numberFormat(totalCost);
+            document.getElementById('costPerHeadDisplay').textContent = numberFormat(costPerHead);
+        }
+
+        // Run calculation on page load
+        document.addEventListener('DOMContentLoaded', calculateBudget);
+
+    </script>
+    <!-- Airbnb SDK -->
+    <script async="" src="https://www.airbnb.ch/embeddable/airbnb_jssdk"></script>
+</body>
+</html>
