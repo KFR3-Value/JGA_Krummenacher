@@ -8,24 +8,23 @@ window.tripDataMap = {
             "<strong>Group Size:</strong> 12 people"
         ],
         "mapLink": "https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d99585.82815341797!2d-9.22772304865925!3d38.74368828603518!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0xd19331a61e4f33b%3A0x400ebbde49036d0!2sLisbon%2C%20Portugal!5e0!3m2!1sen!2sch!4v1680000000000!5m2!1sen!2sch",
-        "villas": [
+        "Villas": [
             {
-                "name": "Option 1: Villa 1",
-                "description": "Best option for group size and location.",
-                "price": 9952,
-                "link": "#",
-                "recommended": true
-            },
-            {
-                "name": "Option 2: Villa 2",
-                "description": "Cheaper, fewer beds.",
-                "price": 7551,
+                "name": "Apartment 1",
+                "description": "",
+                "price": 4000,
                 "link": "#"
             },
             {
-                "name": "Option 3: Villa 3",
-                "description": "Great pool, fewer beds.",
-                "price": 8376,
+                "name": "Apartment 2",
+                "description": "",
+                "price": 3000,
+                "link": "#"
+            },
+            {
+                "name": "Apartment 3",
+                "description": "",
+                "price": 2500,
                 "link": "#"
             }
         ],
@@ -43,9 +42,9 @@ window.tripDataMap = {
         ],
         "activities": [
             {
-                "name": "Boat Rental",
+                "name": "tbd",
                 "link": "#",
-                "desc": "Tagus river cruise"
+                "desc": "tbd"
             }
         ],
         "days": [
@@ -53,24 +52,38 @@ window.tripDataMap = {
                 "date": "Thursday, 30 July",
                 "events": [
                     {
-                        "start": 1020,
-                        "end": 1080,
-                        "title": "Arrival (LIS)",
+                        "start": 990,
+                        "end": 1085,
+                        "title": "Trip to Airport ZH",
+                        "desc": "...",
+                        "type": "chill"
+                    },
+                    {
+                        "start": 1085,
+                        "end": 1200,
+                        "title": "18:05 — 18:05 Flight to Lisbon",
                         "desc": "Transfer to villa",
                         "type": "travel"
                     },
                     {
-                        "start": 1260,
+                        "start": 1200,
+                        "end": 1230,
+                        "title": "Drive to Apartment",
+                        "desc": "...",
+                        "type": "chill"
+                    },
+                    {
+                        "start": 1230,
                         "end": 1380,
                         "title": "Dinner",
-                        "desc": "First beers",
+                        "desc": "\n\n\n",
                         "type": "food"
                     },
                     {
                         "start": 1380,
-                        "end": 1620,
+                        "end": 1439,
                         "title": "Bairro Alto",
-                        "desc": "Bar hop",
+                        "desc": "\n",
                         "type": "party"
                     }
                 ]
@@ -79,69 +92,62 @@ window.tripDataMap = {
                 "date": "Friday, 31 July",
                 "events": [
                     {
-                        "start": 600,
-                        "end": 690,
-                        "title": "Breakfast",
-                        "desc": "Coffee time",
-                        "type": ""
-                    },
-                    {
-                        "start": 960,
-                        "end": 1260,
-                        "title": "Beach Club",
-                        "desc": "Sunset party",
-                        "type": "party"
+                        "start": 0,
+                        "end": 240,
+                        "title": "Club",
+                        "desc": "...",
+                        "type": "chill"
                     }
                 ]
             },
             {
                 "date": "Saturday, 1 Aug",
-                "events": [
-                    {
-                        "start": 660,
-                        "end": 780,
-                        "title": "Brunch",
-                        "desc": "Late brunch",
-                        "type": "food"
-                    },
-                    {
-                        "start": 780,
-                        "end": 1020,
-                        "title": "Pool / Chill",
-                        "desc": "Recovery",
-                        "type": "chill"
-                    }
-                ]
+                "events": []
             },
             {
                 "date": "Sunday, 2 Aug",
                 "events": [
                     {
                         "start": 510,
-                        "end": 600,
+                        "end": 690,
                         "title": "Pack",
-                        "desc": "Cleanup",
+                        "desc": "Breakfast",
                         "type": "chill"
                     },
                     {
-                        "start": 660,
+                        "start": 690,
                         "end": 720,
-                        "title": "Transfer",
-                        "desc": "To Airport",
-                        "type": "travel"
+                        "title": "Drive to LIS",
+                        "desc": "...",
+                        "type": "chill"
+                    },
+                    {
+                        "start": 720,
+                        "end": 805,
+                        "title": "Checkin LIS",
+                        "desc": "...",
+                        "type": "chill"
+                    },
+                    {
+                        "start": 805,
+                        "end": 1035,
+                        "title": "Flight Home",
+                        "desc": "...",
+                        "type": "chill"
                     }
                 ]
             }
         ],
         "budgetDefaults": {
             "villaIndex": 0,
-            "flightCost": 3500,
-            "foodCost": 1200,
-            "partyCost": 5000,
-            "taxiCost": 400,
-            "vipCost": 1000
+            "flightCost": 4200,
+            "foodCost": 2400,
+            "partyCost": 2400,
+            "taxiCost": 300,
+            "vipCost": 600
         }
     },
+
     "OLB": {
         "title": "Sardinia 2026",
         "dates": "30.7.2026 - 2.8.2026",
@@ -344,10 +350,10 @@ window.tripDataMap = {
         "budgetDefaults": {
             "villaIndex": 0,
             "flightCost": 4200,
-            "foodCost": 1200,
-            "partyCost": 6000,
-            "taxiCost": 600,
-            "vipCost": 1200
+            "foodCost": 2400,
+            "partyCost": 2400,
+            "taxiCost": 300,
+            "vipCost": 600
         }
     }
 };
