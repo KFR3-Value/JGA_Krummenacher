@@ -3,45 +3,94 @@
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width,initial-scale=1">
-    <title>Trip Template</title>
+    <title>Trip Planner</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;900&display=swap" rel="stylesheet">
     <style>
-        body { font-family: 'Inter', sans-serif; background: #f3f4f6; }
-        .calendar-day{ background:#fff;border:1px solid #d1d5db;border-radius:0.5rem;overflow:hidden }
-        .day-header{ background:#f9fafb;padding:.75rem 1rem;border-bottom:1px solid #d1d5db }
-        .day-title{ font-weight:700;color:#1f2937 }
-        .day-subtitle{ color:#4b5563;font-size:.9rem }
-        .timeline-wrapper{ position:relative; --hour-height:50px; --minute-height:calc(var(--hour-height)/60); height:calc(24*var(--hour-height)); background:#f9fafb }
-        .hour-lines{ position:absolute; inset:0; display:flex; flex-direction:column }
+        body { font-family: 'Inter', sans-serif; background: #f3f4f6; padding-bottom: 80px; }
+        
+        /* Navigation & Buttons */
+        .primary-nav { display:flex; justify-content:center; gap:1rem; padding:1rem; background:#1f2937; margin-bottom:2rem; }
+        .primary-btn { padding:0.5rem 2rem; font-weight:800; color:#9ca3af; border:2px solid #374151; border-radius:0.5rem; transition:all 0.2s; }
+        .primary-btn:hover { color:#fff; border-color:#fff; }
+        .primary-btn.active { background:#fff; color:#000; border-color:#fff; }
+        .tab-button{ padding:.5rem 1rem; font-weight:600; border-radius:.5rem; cursor:pointer; transition: all 0.2s; }
+        .tab-button.active{ background:#fff; color:#3b82f6; box-shadow: 0 1px 2px rgba(0,0,0,0.1); }
+
+        /* Layout & Containers */
+        .tab-content{ display:none }
+        .tab-content.active{ display:block }
+        .calendar-day{ background:#fff;border:1px solid #d1d5db;border-radius:0.5rem;overflow:hidden; display:flex; flex-direction:column; }
+        .day-header{ background:#f9fafb;padding:.75rem 1rem;border-bottom:1px solid #d1d5db; flex-shrink:0; }
+        .timeline-wrapper{ position:relative; --hour-height:60px; --minute-height:calc(var(--hour-height)/60); height:calc(28*var(--hour-height)); background:#f9fafb; flex-grow:1; }
+        
+        /* Events & Blocks */
         .hour-line{ height:var(--hour-height); border-bottom:1px solid #e5e7eb; display:flex; align-items:flex-start }
         .hour-label{ padding:.25rem .5rem; font-size:.75rem; color:#9ca3af; width:4rem; text-align:right }
-        .event-block{ position:absolute; left:4.5rem; right:.5rem; background:#fff; border:1px solid #e5e7eb; border-left-width:4px; border-radius:.375rem; padding:.5rem .75rem; overflow:hidden }
+        .event-block{ position:absolute; left:4.5rem; right:.5rem; background:#fff; border:1px solid #e5e7eb; border-left-width:4px; border-radius:.375rem; padding:.25rem .5rem; overflow:hidden; z-index:10; transition: all 0.2s; box-shadow: 0 1px 2px rgba(0,0,0,0.05); }
+        .event-block:hover { z-index: 50; box-shadow: 0 8px 16px rgba(0,0,0,0.15); min-height: fit-content !important; height: auto !important; }
         .party-slot{ background:#fef9c3; border-color:#f59e0b }
         .travel-slot{ background:#e0f2fe; border-color:#3b82f6 }
         .chill-slot{ background:#e0fbf0; border-color:#10b981 }
         .food-slot{ background:#ffe4e6; border-color:#ef4444 }
-        .tab-button{ padding:.5rem 1rem; font-weight:600; border-radius:.5rem; cursor:pointer }
-        .tab-button.active{ background:#fff; color:#3b82f6 }
-        .tab-content{ display:none }
-        .tab-content.active{ display:block }
+        
+        /* Controls */
+        .event-controls { display: none; position: absolute; top: 2px; right: 2px; gap: 4px; background: rgba(255,255,255,0.9); padding: 2px; border-radius: 4px; }
+        .event-block:hover .event-controls { display: flex; }
+        .ctrl-btn { font-size: 12px; cursor: pointer; padding: 2px 6px; border-radius: 3px; border: 1px solid #ccc; background: #fff; }
+        .add-event-btn { margin: 10px; padding: 8px; text-align: center; border: 2px dashed #d1d5db; border-radius: 0.5rem; color: #6b7280; cursor: pointer; font-weight: 600; font-size: 0.9rem; transition: all 0.2s; }
+        .add-event-btn:hover { border-color: #3b82f6; color: #3b82f6; background: #eff6ff; }
+
+        /* Modal */
+        .modal-overlay { display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.5); z-index: 100; align-items: center; justify-content: center; }
+        .modal-overlay.open { display: flex; }
+        .modal-box { background: white; padding: 2rem; border-radius: 0.5rem; width: 90%; max-width: 400px; box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1); }
+        
+        /* Embeds */
         .embed-container, .map-container, .budget-container{ background:#fff;border:1px solid #d1d5db;border-radius:.5rem;padding:1.25rem }
         .budget-input{ width:100%; padding:.5rem .75rem; border:1px solid #d1d5db; border-radius:.375rem }
     </style>
 </head>
-<body class="p-6 md:p-10">
-    <div class="max-w-screen-xl mx-auto">
+<body>
+    <nav class="primary-nav">
+        <button class="primary-btn" onclick="switchDestination('LIS')" id="btn-LIS">LISBON</button>
+        <button class="primary-btn" onclick="switchDestination('OLB')" id="btn-OLB">OLBIA</button>
+    </nav>
+
+    <div id="addEventModal" class="modal-overlay">
+        <div class="modal-box">
+            <h3 class="text-xl font-bold mb-4">Add New Event</h3>
+            <div class="mb-3"><label class="block text-sm font-medium text-gray-700">Title</label><input type="text" id="modalTitle" class="mt-1 block w-full border border-gray-300 rounded-md shadow-sm p-2"></div>
+            <div class="mb-3"><label class="block text-sm font-medium text-gray-700">Date</label><select id="modalDaySelect" class="mt-1 block w-full border border-gray-300 rounded-md shadow-sm p-2"></select></div>
+            <div class="grid grid-cols-2 gap-4 mb-4">
+                <div><label class="block text-sm font-medium text-gray-700">Start</label><input type="time" id="modalStart" class="mt-1 block w-full border border-gray-300 rounded-md shadow-sm p-2"></div>
+                <div><label class="block text-sm font-medium text-gray-700">End</label><input type="time" id="modalEnd" class="mt-1 block w-full border border-gray-300 rounded-md shadow-sm p-2"></div>
+            </div>
+            <div class="flex justify-end gap-2">
+                <button onclick="closeModal()" class="bg-gray-200 hover:bg-gray-300 text-gray-800 font-bold py-2 px-4 rounded">Cancel</button>
+                <button onclick="saveNewEvent()" class="bg-blue-600 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded">Save</button>
+            </div>
+        </div>
+    </div>
+
+    <div class="fixed bottom-6 right-6 flex flex-col gap-2 z-50">
+        <button id="btn-save-local" onclick="saveToBrowser()" class="bg-blue-600 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded shadow-lg">💾 Save Changes</button>
+        <button onclick="downloadConfig()" class="bg-green-600 hover:bg-green-700 text-white font-bold py-2 px-4 rounded shadow-lg">⬇️ Download JS</button>
+        <button onclick="resetToDefault()" class="bg-red-500 hover:bg-red-600 text-white font-bold py-2 px-4 rounded shadow-lg text-xs opacity-80">Reset</button>
+    </div>
+
+    <div class="max-w-screen-xl mx-auto px-4 md:px-10">
         <header class="mb-6">
             <h1 id="pageTitle" class="text-3xl font-extrabold text-gray-900">Trip</h1>
             <p id="pageDates" class="text-gray-600">Dates</p>
         </header>
 
         <section class="mb-6 p-4 bg-white rounded-lg border border-gray-200">
-            <h2 class="font-bold">Key Planning Assumptions</h2>
-            <ul id="planningAssumptions" class="list-disc list-inside"></ul>
+            <h2 class="font-bold mb-2">Key Planning Assumptions</h2>
+            <ul id="planningAssumptions" class="list-disc list-inside space-y-1 text-sm text-gray-700"></ul>
         </section>
 
-        <nav class="mb-6 p-1 bg-gray-100 rounded-lg inline-flex">
+        <nav class="mb-6 p-1 bg-gray-100 rounded-lg inline-flex flex-wrap gap-1">
             <button class="tab-button active" data-tab="agenda">Agenda</button>
             <button class="tab-button" data-tab="villas">Villa Options</button>
             <button class="tab-button" data-tab="map">Map</button>
@@ -52,211 +101,282 @@
 
         <main>
             <div id="agenda" class="tab-content active">
+                <div class="mb-4 bg-blue-50 border border-blue-200 text-blue-800 px-4 py-3 rounded relative text-sm">
+                    <strong>Editable:</strong> Click text to edit. Hover block to change time/delete. Use "+ Add Event" below.
+                </div>
                 <div id="agendaGrid" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6"></div>
             </div>
 
             <div id="villas" class="tab-content">
                 <div id="villaGrid" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6"></div>
             </div>
-
+            
             <div id="map" class="tab-content">
                 <div class="map-container">
-                    <h3>Map</h3>
-                    <div class="map-iframe-wrapper" style="padding-top:56.25%"><iframe id="mapIframe" src="about:blank" style="position:absolute;inset:0;width:100%;height:100%;border:0"></iframe></div>
+                    <h3 class="font-bold text-lg mb-2">Map</h3>
+                    <div class="map-iframe-wrapper" style="padding-top:56.25%; position:relative;">
+                        <iframe id="mapIframe" src="about:blank" style="position:absolute;inset:0;width:100%;height:100%;border:0"></iframe>
+                    </div>
                 </div>
             </div>
 
-            <div id="venues" class="tab-content">
-                <div id="partyGrid" class="grid grid-cols-1 md:grid-cols-2 gap-6"></div>
-            </div>
-
-            <div id="activities" class="tab-content">
-                <div id="activitiesGrid" class="grid grid-cols-1 md:grid-cols-2 gap-6"></div>
-            </div>
+            <div id="venues" class="tab-content"><div id="partyGrid" class="grid grid-cols-1 md:grid-cols-2 gap-6"></div></div>
+            <div id="activities" class="tab-content"><div id="activitiesGrid" class="grid grid-cols-1 md:grid-cols-2 gap-6"></div></div>
 
             <div id="budget" class="tab-content">
                 <div class="budget-container">
-                    <h3>Budget Calculator</h3>
-                    <div class="grid grid-cols-1 lg:grid-cols-2 gap-6 mt-4">
+                    <h3 class="text-lg font-bold mb-4">Budget Calculator</h3>
+                    <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
                         <div>
-                            <div id="villaOptions"></div>
-                            <div class="mt-4">
-                                <label class="block font-medium">Flights (total)</label>
-                                <input id="flightCost" type="number" class="budget-input mt-1" />
-                            </div>
-                            <div class="mt-4">
-                                <label class="block font-medium">Food</label>
-                                <input id="foodCost" type="number" class="budget-input mt-1" />
-                            </div>
-                            <div class="mt-4">
-                                <label class="block font-medium">Party</label>
-                                <input id="partyCost" type="number" class="budget-input mt-1" />
-                            </div>
-                            <div class="mt-4">
-                                <label class="block font-medium">Taxis</label>
-                                <input id="taxiCost" type="number" class="budget-input mt-1" />
-                            </div>
-                            <div class="mt-4">
-                                <label class="block font-medium">VIP</label>
-                                <input id="vipCost" type="number" class="budget-input mt-1" />
+                            <h4 class="font-bold mb-2">Select Villa:</h4>
+                            <div id="villaOptions" class="space-y-2"></div>
+                            <hr class="my-4">
+                            <div class="grid grid-cols-2 gap-4">
+                                <div><label class="block text-sm font-medium">Flights</label><input id="flightCost" type="number" class="budget-input mt-1" /></div>
+                                <div><label class="block text-sm font-medium">Food</label><input id="foodCost" type="number" class="budget-input mt-1" /></div>
+                                <div><label class="block text-sm font-medium">Party</label><input id="partyCost" type="number" class="budget-input mt-1" /></div>
+                                <div><label class="block text-sm font-medium">Taxis</label><input id="taxiCost" type="number" class="budget-input mt-1" /></div>
+                                <div><label class="block text-sm font-medium">VIP</label><input id="vipCost" type="number" class="budget-input mt-1" /></div>
                             </div>
                         </div>
                         <div>
-                            <div class="summary-box">
-                                <div class="flex justify-between"><span>Villa:</span><strong id="summaryVilla">0.00 CHF</strong></div>
-                                <div class="flex justify-between"><span>Flights:</span><strong id="summaryFlights">0.00 CHF</strong></div>
-                                <div class="flex justify-between"><span>Food:</span><strong id="summaryFood">0.00 CHF</strong></div>
-                                <div class="flex justify-between"><span>Party:</span><strong id="summaryParty">0.00 CHF</strong></div>
-                                <div class="flex justify-between"><span>Taxis:</span><strong id="summaryTaxis">0.00 CHF</strong></div>
-                                <div class="flex justify-between"><span>VIP:</span><strong id="summaryVIP">0.00 CHF</strong></div>
+                            <div class="bg-gray-50 p-4 rounded border border-gray-200">
+                                <div class="flex justify-between text-sm"><span>Villa:</span><strong id="summaryVilla">0.00 CHF</strong></div>
+                                <div class="flex justify-between text-sm"><span>Flights:</span><strong id="summaryFlights">0.00 CHF</strong></div>
+                                <div class="flex justify-between text-sm"><span>Food:</span><strong id="summaryFood">0.00 CHF</strong></div>
+                                <div class="flex justify-between text-sm"><span>Party:</span><strong id="summaryParty">0.00 CHF</strong></div>
+                                <div class="flex justify-between text-sm"><span>Taxis:</span><strong id="summaryTaxis">0.00 CHF</strong></div>
+                                <div class="flex justify-between text-sm"><span>VIP:</span><strong id="summaryVIP">0.00 CHF</strong></div>
                                 <hr class="my-4" />
-                                <div class="text-center"><div>TOTAL</div><div id="totalCostDisplay" class="text-2xl font-bold">0.00 CHF</div></div>
-                                <div class="text-center mt-4"><div>Per Head</div><div id="costPerHeadDisplay" class="text-2xl font-bold">0.00 CHF</div></div>
+                                <div class="text-center"><div class="text-sm text-gray-500">TOTAL</div><div id="totalCostDisplay" class="text-2xl font-bold text-green-600">0.00 CHF</div></div>
+                                <div class="text-center mt-2"><div class="text-sm text-gray-500">PER HEAD (12)</div><div id="costPerHeadDisplay" class="text-xl font-bold text-blue-600">0.00 CHF</div></div>
                             </div>
                         </div>
                     </div>
                 </div>
             </div>
-
         </main>
     </div>
 
+    <div id="airbnb-script-container"></div>
+
     <script src="trip_data.js"></script>
+
     <script>
-        // Tab wiring
-        document.querySelectorAll('.tab-button').forEach(btn=> btn.addEventListener('click', ()=>{
-            document.querySelectorAll('.tab-button').forEach(b=>b.classList.remove('active'));
-            document.querySelectorAll('.tab-content').forEach(c=>c.classList.remove('active'));
-            btn.classList.add('active');
-            document.getElementById(btn.getAttribute('data-tab')).classList.add('active');
-        }));
+        /* --- APP LOGIC --- */
+        let currentTrip = null;
+        let currentKey = 'OLB';
 
-        // Rendering helpers
-        function createHourLines(){
-            let out = '';
-            for(let i=0;i<24;i++){
-                const hh = String(i).padStart(2,'0')+':00';
-                out += `<div class="hour-line"><div class="hour-label">${hh}</div></div>`;
+        function switchDestination(key) {
+            if(!window.tripDataMap || !window.tripDataMap[key]) {
+                console.error("Trip data not loaded. Check trip_data.js.");
+                return;
             }
-            return out;
+            currentKey = key;
+            currentTrip = JSON.parse(JSON.stringify(window.tripDataMap[key]));
+            
+            document.querySelectorAll('.primary-btn').forEach(b => b.classList.remove('active'));
+            const btn = document.getElementById('btn-'+key);
+            if(btn) btn.classList.add('active');
+
+            loadFromBrowser();
+            renderAll();
         }
 
-        function renderAgenda(){
-            const container = document.getElementById('agendaGrid');
-            container.innerHTML = '';
-            tripData.days.forEach(day=>{
-                const dayEl = document.createElement('div');
-                dayEl.className = 'calendar-day';
-                dayEl.innerHTML = `
-                    <div class="day-header"><h2 class="day-title">${day.date}</h2><p class="day-subtitle">${day.subtitle||''}</p></div>
-                    <div class="timeline-wrapper">
-                        <div class="hour-lines">${createHourLines()}</div>
-                    </div>
-                `;
-                const timeline = dayEl.querySelector('.timeline-wrapper');
-                day.events.forEach(ev=>{
-                    const dur = ev.end - ev.start; // minutes
-                    const div = document.createElement('div');
-                    div.className = 'event-block '+(ev.type?ev.type+'-slot':'');
-                    div.setAttribute('title', `${formatTime(ev.start)} - ${formatTime(ev.end)}: ${ev.title}`);
-                    div.style.top = `calc((${ev.start} * var(--minute-height)))`;
-                    div.style.height = `calc(${dur} * var(--minute-height))`;
-                    div.innerHTML = `<h3>${formatTime(ev.start)} — ${ev.title}</h3><p>${ev.desc||''}</p>`;
-                    timeline.appendChild(div);
-                });
-                container.appendChild(dayEl);
-            });
+        function renderAll() {
+            renderHeader();
+            renderPlanning();
+            renderAgenda();
+            renderVillas();
+            renderMap();
+            renderVenues();
+            renderActivities();
+            setupBudget();
         }
 
-        function formatTime(min){
-            const h = Math.floor(min/60), m = min%60; return String(h).padStart(2,'0')+':'+String(m).padStart(2,'0');
-        }
+        document.addEventListener('DOMContentLoaded', () => {
+            // Ensure external data is loaded
+            if(window.tripDataMap) {
+                switchDestination('OLB');
+            } else {
+                alert("Error: trip_data.js file not found or loaded.");
+            }
+        });
 
-        function renderVillas(){
-            const g = document.getElementById('villaGrid'); g.innerHTML='';
-            tripData.villas.forEach(v=>{
-                const div = document.createElement('div'); div.className='embed-container'+(v.recommended? ' recommended':'');
-                div.innerHTML = `<h3 class="">${v.name}</h3><p class="text-gray-600">${v.description}</p><p class="mt-2 font-semibold">Price: ${v.price} CHF</p><a href="${v.link}" target="_blank" class="inline-block mt-3 text-blue-600">Open</a>`;
-                g.appendChild(div);
-            });
-        }
-
-        function renderMap(){
-            const iframe = document.getElementById('mapIframe');
-            iframe.src = tripData.mapLink || 'about:blank';
-        }
-
-        function renderVenues(){
-            const g = document.getElementById('partyGrid'); g.innerHTML='';
-            tripData.venues.forEach(v=>{
-                const div = document.createElement('div'); div.className='embed-container';
-                div.innerHTML = `<h3>${v.name}</h3><p class="text-gray-600">${v.desc||''}</p><a href="${v.link}" target="_blank" class="block w-full text-center bg-blue-600 text-white py-3 rounded mt-4">Open ${v.domain||''}</a>`;
-                g.appendChild(div);
-            });
-        }
-
-        function renderActivities(){
-            const g = document.getElementById('activitiesGrid'); g.innerHTML='';
-            tripData.activities.forEach(a=>{
-                const div = document.createElement('div'); div.className='embed-container';
-                div.innerHTML = `<h3>${a.name}</h3><p class="text-gray-600">${a.desc||''}</p><a href="${a.link}" target="_blank" class="block w-full text-center bg-blue-600 text-white py-3 rounded mt-4">Open</a>`;
-                g.appendChild(div);
-            });
-        }
-
-        function renderPlanning(){
-            const ul = document.getElementById('planningAssumptions'); ul.innerHTML='';
-            tripData.planningAssumptions.forEach(line=>{ const li=document.createElement('li'); li.innerHTML=line; ul.appendChild(li); });
-        }
-
-        function renderHeader(){ document.getElementById('pageTitle').textContent = tripData.title; document.getElementById('pageDates').textContent = tripData.dates; }
-
-        // Budget
+        /* --- BUDGET CALCULATOR --- */
         function setupBudget(){
-            const villaOptions = document.getElementById('villaOptions'); villaOptions.innerHTML='';
-            tripData.villas.forEach((v,i)=>{
-                const label = document.createElement('label'); label.className='block mb-2';
-                label.innerHTML = `<input type="radio" name="villa_option" value="${v.price}" ${i===tripData.budgetDefaults.villaIndex? 'checked':''}> ${v.name} — ${v.price} CHF`;
-                villaOptions.appendChild(label);
-            });
-            // populate defaults
-            document.getElementById('flightCost').value = tripData.budgetDefaults.flightCost || 0;
-            document.getElementById('foodCost').value = tripData.budgetDefaults.foodCost || 0;
-            document.getElementById('partyCost').value = tripData.budgetDefaults.partyCost || 0;
-            document.getElementById('taxiCost').value = tripData.budgetDefaults.taxiCost || 0;
-            document.getElementById('vipCost').value = tripData.budgetDefaults.vipCost || 0;
+            const container = document.getElementById('villaOptions');
+            container.innerHTML = ''; 
 
-            // attach listeners
-            document.querySelectorAll('#villaOptions input[name="villa_option"]').forEach(i=>i.addEventListener('change', calculateBudget));
-            ['flightCost','foodCost','partyCost','taxiCost','vipCost'].forEach(id=>document.getElementById(id).addEventListener('input', calculateBudget));
+            currentTrip.villas.forEach((v, index) => {
+                const div = document.createElement('div');
+                div.className = 'flex items-center p-3 border rounded mb-2 cursor-pointer transition-colors hover:bg-gray-50';
+                
+                const isDefault = (index === (currentTrip.budgetDefaults.villaIndex || 0));
+                if(isDefault) div.classList.add('bg-blue-50', 'border-blue-300');
+
+                const input = document.createElement('input');
+                input.type = 'radio';
+                input.name = 'villa_radio';
+                input.value = v.price;
+                input.className = 'mr-3 h-4 w-4 text-blue-600';
+                if(isDefault) input.checked = true;
+
+                input.addEventListener('change', () => {
+                    document.querySelectorAll('#villaOptions > div').forEach(d => d.classList.remove('bg-blue-50', 'border-blue-300'));
+                    div.classList.add('bg-blue-50', 'border-blue-300');
+                    calculateBudget();
+                });
+
+                const label = document.createElement('span');
+                label.innerHTML = `<strong>${v.name}</strong> <span class="text-gray-500">(${v.price} CHF)</span>`;
+                
+                div.appendChild(input);
+                div.appendChild(label);
+                div.addEventListener('click', (e) => { if(e.target !== input) { input.checked = true; input.dispatchEvent(new Event('change')); } });
+                container.appendChild(div);
+            });
+
+            ['flightCost','foodCost','partyCost','taxiCost','vipCost'].forEach(id => {
+                const el = document.getElementById(id);
+                el.value = currentTrip.budgetDefaults[id] || 0;
+                el.oninput = calculateBudget;
+            });
+
             calculateBudget();
         }
 
-        function calculateBudget(){
-            const format = v => isNaN(v)? '0.00 CHF' : v.toLocaleString('de-CH',{style:'currency',currency:'CHF',minimumFractionDigits:2});
-            const villaCost = parseFloat(document.querySelector('input[name="villa_option"]:checked').value) || 0;
-            const flightCost = parseFloat(document.getElementById('flightCost').value) || 0;
-            const foodCost = parseFloat(document.getElementById('foodCost').value) || 0;
-            const partyCost = parseFloat(document.getElementById('partyCost').value) || 0;
-            const taxiCost = parseFloat(document.getElementById('taxiCost').value) || 0;
-            const vipCost = parseFloat(document.getElementById('vipCost').value) || 0;
-            const total = villaCost + flightCost + foodCost + partyCost + taxiCost + vipCost;
-            const perHead = total / (tripData.groupSize || 12);
-            document.getElementById('summaryVilla').textContent = format(villaCost);
-            document.getElementById('summaryFlights').textContent = format(flightCost);
-            document.getElementById('summaryFood').textContent = format(foodCost);
-            document.getElementById('summaryParty').textContent = format(partyCost);
-            document.getElementById('summaryTaxis').textContent = format(taxiCost);
-            document.getElementById('summaryVIP').textContent = format(vipCost);
-            document.getElementById('totalCostDisplay').textContent = format(total);
-            document.getElementById('costPerHeadDisplay').textContent = format(perHead);
+        function calculateBudget() {
+            const fmt = v => isNaN(v) ? '0.00 CHF' : v.toLocaleString('de-CH', { style: 'currency', currency: 'CHF' });
+            
+            // 1. Get Villa Cost
+            const checkedRadio = document.querySelector('input[name="villa_radio"]:checked');
+            const villaCost = checkedRadio ? parseFloat(checkedRadio.value) : 0;
+
+            // 2. Direct Map for Summary IDs
+            const idMap = {
+                'flightCost': 'summaryFlights',
+                'foodCost': 'summaryFood',
+                'partyCost': 'summaryParty',
+                'taxiCost': 'summaryTaxis',
+                'vipCost': 'summaryVIP'
+            };
+
+            let total = villaCost;
+            
+            for (const [inputId, summaryId] of Object.entries(idMap)) {
+                const val = parseFloat(document.getElementById(inputId).value) || 0;
+                total += val;
+                const summaryEl = document.getElementById(summaryId);
+                if(summaryEl) summaryEl.innerText = fmt(val);
+            }
+
+            document.getElementById('summaryVilla').innerText = fmt(villaCost);
+            document.getElementById('totalCostDisplay').innerText = fmt(total);
+            const perHead = total / (currentTrip.groupSize || 12);
+            document.getElementById('costPerHeadDisplay').innerText = fmt(perHead);
         }
 
-        // Initial render
-        (function(){
-            if(!window.tripData){ console.error('tripData not found; create trip_data.js'); return; }
-            renderHeader(); renderPlanning(); renderAgenda(); renderVillas(); renderMap(); renderVenues(); renderActivities(); setupBudget();
-        })();
+        /* --- VILLA EMBEDS --- */
+        function renderVillas() {
+            const g = document.getElementById('villaGrid'); g.innerHTML = '';
+            currentTrip.villas.forEach(v => {
+                const div = document.createElement('div');
+                div.className = 'embed-container transition hover:shadow-lg' + (v.recommended ? ' border-blue-500 border-4' : '');
+                let html = `<h3 class="font-bold text-lg mb-1">${v.name}</h3><p class="text-sm text-gray-600 mb-3">${v.description}</p><div class="mb-4 font-bold text-green-600 text-lg">${v.price} CHF</div>`;
+                if(v.airbnbId) {
+                    html += `<div class="airbnb-embed-frame" data-id="${v.airbnbId}" data-view="home" data-hide-price="true" style="width:100%;height:300px;margin:auto;"><a href="${v.link}">View on Airbnb</a></div>`;
+                } else {
+                    html += `<a href="${v.link}" target="_blank" class="block w-full text-center bg-gray-100 text-blue-600 font-bold py-8 rounded border border-gray-200 hover:bg-gray-200">View Property Website</a>`;
+                }
+                div.innerHTML = html; g.appendChild(div);
+            });
+            loadAirbnbScript();
+        }
+        function loadAirbnbScript() {
+            const c = document.getElementById('airbnb-script-container'); c.innerHTML = ''; 
+            const s = document.createElement('script'); s.src = "https://www.airbnb.ch/embeddable/airbnb_jssdk"; s.async = true; c.appendChild(s);
+        }
+
+        /* --- BOILERPLATE --- */
+        function createHourLines(c=28){ let s=''; for(let i=0;i<c;i++) s+=`<div class="hour-line"><div class="hour-label">${String(i%24).padStart(2,'0')}:00</div></div>`; return s;}
+        function formatTime(m){ return String(Math.floor(m/60)%24).padStart(2,'0')+':'+String(m%60).padStart(2,'0'); }
+        function timeToMin(s){ const p=s.split(':'); return p.length===2 ? parseInt(p[0])*60+parseInt(p[1]) : null; }
+
+        function renderAgenda(){
+            const c = document.getElementById('agendaGrid'); c.innerHTML='';
+            currentTrip.days.forEach((d, di) => {
+                const dayEl = document.createElement('div'); dayEl.className='calendar-day';
+                dayEl.innerHTML=`<div class="day-header"><h2 class="day-title">${d.date}</h2><p class="day-subtitle">${d.subtitle||''}</p></div>
+                                 <div class="timeline-wrapper"><div class="hour-lines">${createHourLines()}</div></div>
+                                 <div class="add-event-btn" onclick="openAddModal(${di})">+ Add Event</div>`;
+                const tl = dayEl.querySelector('.timeline-wrapper');
+                d.events.forEach((ev, ei) => {
+                    const dur = ev.end - ev.start;
+                    const b = document.createElement('div');
+                    b.className = 'event-block '+(ev.type?ev.type+'-slot':'');
+                    b.style.top = `calc(${ev.start} * var(--minute-height))`;
+                    b.style.height = `calc(${dur} * var(--minute-height))`;
+                    b.innerHTML=`<div class="event-controls"><button class="ctrl-btn" onclick="changeTime(${di},${ei})">🕒</button><button class="ctrl-btn text-red-600" onclick="deleteEvent(${di},${ei})">🗑️</button></div>
+                                 <h3 contenteditable="true" onblur="updateEvent(${di},${ei},'title',this.innerText)" class="font-bold text-xs leading-tight outline-none hover:bg-gray-50 cursor-text">${formatTime(ev.start)} — ${ev.title}</h3>
+                                 <p contenteditable="true" onblur="updateEvent(${di},${ei},'desc',this.innerText)" class="text-xs text-gray-600 mt-1 outline-none hover:bg-gray-50 cursor-text min-h-[1em]">${ev.desc||''}</p>`;
+                    tl.appendChild(b);
+                });
+                c.appendChild(dayEl);
+            });
+        }
+
+        function renderHeader(){ document.getElementById('pageTitle').innerText=currentTrip.title; document.getElementById('pageDates').innerText=currentTrip.dates; }
+        function renderPlanning(){ const u=document.getElementById('planningAssumptions'); u.innerHTML=''; currentTrip.planningAssumptions.forEach(t=>{ const l=document.createElement('li'); l.innerHTML=t; u.appendChild(l); }); }
+        function renderMap(){ document.getElementById('mapIframe').src=currentTrip.mapLink||'about:blank'; }
+        function renderVenues(){ const g=document.getElementById('partyGrid'); g.innerHTML=''; currentTrip.venues.forEach(v=>{ g.innerHTML+=`<div class="embed-container"><h3 class="font-bold">${v.name}</h3><p class="text-sm text-gray-600">${v.desc||''}</p><a href="${v.link}" target="_blank" class="block bg-blue-600 text-white text-center py-2 rounded mt-4 text-sm">Open Link</a></div>`; }); }
+        function renderActivities(){ const g=document.getElementById('activitiesGrid'); g.innerHTML=''; currentTrip.activities.forEach(a=>{ g.innerHTML+=`<div class="embed-container"><h3 class="font-bold">${a.name}</h3><p class="text-sm text-gray-600">${a.desc||''}</p><a href="${a.link}" target="_blank" class="block bg-blue-600 text-white text-center py-2 rounded mt-4 text-sm">Open Link</a></div>`; }); }
+
+        /* --- MODAL & EDITING LOGIC --- */
+        function openAddModal(di){ 
+            const sel=document.getElementById('modalDaySelect'); sel.innerHTML=''; 
+            currentTrip.days.forEach((d,i)=>{ const o=document.createElement('option'); o.value=i; o.text=d.date; if(i===di)o.selected=true; sel.appendChild(o); });
+            document.getElementById('modalTitle').value=""; document.getElementById('modalStart').value="12:00"; document.getElementById('modalEnd').value="13:00";
+            document.getElementById('addEventModal').classList.add('open'); 
+        }
+        function closeModal(){ document.getElementById('addEventModal').classList.remove('open'); }
+        function saveNewEvent(){
+            const t=document.getElementById('modalTitle').value||"New", di=parseInt(document.getElementById('modalDaySelect').value);
+            const s=timeToMin(document.getElementById('modalStart').value), e=timeToMin(document.getElementById('modalEnd').value);
+            if(s===null||e===null||e<=s){ alert("Invalid Times"); return; }
+            currentTrip.days[di].events.push({start:s, end:e, title:t, desc:"...", type:"chill"});
+            currentTrip.days[di].events.sort((a,b)=>a.start-b.start);
+            saveToBrowser(); renderAgenda(); closeModal();
+        }
+        function deleteEvent(di,ei){ if(confirm("Delete?")){ currentTrip.days[di].events.splice(ei,1); saveToBrowser(); renderAgenda(); } }
+        function changeTime(di,ei){
+            const ev=currentTrip.days[di].events[ei], ns=prompt("Start (HH:MM)",formatTime(ev.start)); if(!ns)return;
+            const ne=prompt("End (HH:MM)",formatTime(ev.end)); if(!ne)return;
+            const s=timeToMin(ns), e=timeToMin(ne);
+            if(s!==null&&e!==null&&e>s){ ev.start=s; ev.end=e; saveToBrowser(); renderAgenda(); } else alert("Invalid");
+        }
+        function updateEvent(di,ei,k,v){ currentTrip.days[di].events[ei][k]=v; saveToBrowser(); }
+
+        /* --- STORAGE --- */
+        function saveToBrowser(){ localStorage.setItem('tripData_save_'+currentKey, JSON.stringify(currentTrip)); const b=document.getElementById('btn-save-local'); if(b){ b.innerText="✅ Saved!"; setTimeout(()=>b.innerText="💾 Save Changes",1000); } }
+        function loadFromBrowser(){ const s=localStorage.getItem('tripData_save_'+currentKey); if(s) currentTrip.days=JSON.parse(s).days; }
+        function resetToDefault(){ if(confirm("Reset?")){ localStorage.removeItem('tripData_save_'+currentKey); location.reload(); } }
+        function downloadConfig(){ 
+            // Clone the map to avoid modifying the original 'window.tripDataMap'
+            const exportMap = JSON.parse(JSON.stringify(window.tripDataMap));
+            // Update the current destination in the export map with current (potentially edited) trip data
+            exportMap[currentKey] = currentTrip;
+            
+            const b=new Blob(["window.tripDataMap = "+JSON.stringify(exportMap,null,4)+";"],{type:'text/javascript'});
+            const a=document.createElement('a'); a.href=URL.createObjectURL(b); a.download='trip_data.js'; a.click(); 
+        }
+
+        /* --- TAB LOGIC --- */
+        document.querySelectorAll('.tab-button').forEach(b=>b.onclick=()=>{
+            document.querySelectorAll('.tab-button').forEach(x=>x.classList.remove('active'));
+            document.querySelectorAll('.tab-content').forEach(x=>x.classList.remove('active'));
+            b.classList.add('active'); document.getElementById(b.dataset.tab).classList.add('active');
+        });
     </script>
 </body>
 </html>
