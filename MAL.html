@@ -1,0 +1,318 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+  <meta charset="UTF-8" />
+  <title>Michi's JGA – Malta</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <style>
+    :root {
+      --bg: #050609;
+      --bg-soft: #10131a;
+      --accent: #ff6b4a;
+      --text: #f5f5f5;
+      --muted: #a9b0c2;
+      --border-soft: rgba(255,255,255,0.08);
+      --radius-xl: 24px;
+      --radius-lg: 14px;
+      --shadow-soft: 0 24px 60px rgba(0,0,0,0.6);
+    }
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body {
+      font-family: system-ui, sans-serif;
+      background: radial-gradient(circle at top left, #192035 0, #050609 45%, #020308 100%);
+      color: var(--text);
+      line-height: 1.5;
+    }
+    .page { max-width: 900px; margin: 0 auto; padding: 32px 20px 64px; }
+
+    header { display: flex; justify-content: space-between; margin-bottom: 32px; flex-wrap: wrap; }
+    .logo-title { font-size: 18px; font-weight: 600; }
+    .logo-sub { font-size: 12px; color: var(--muted); }
+
+    nav ul { list-style: none; display: flex; gap: 16px; font-size: 13px; flex-wrap: wrap; }
+    nav a { text-decoration: none; color: var(--muted); border-bottom: 1px solid transparent; }
+    nav a:hover { color: #fff; border-color: var(--accent); }
+
+    .hero-kicker { text-transform: uppercase; font-size: 11px; letter-spacing: .18em; color: var(--muted); margin-bottom: 8px; }
+    h1 { font-size: clamp(28px,4vw,36px); margin-bottom: 10px; }
+    h1 span { background: linear-gradient(120deg,#ffb85a,#ff6b4a,#ff4a82); -webkit-background-clip:text; color:transparent; }
+    .hero-text { font-size: 14px; color: var(--muted); margin-bottom: 16px; }
+
+    .pill-row { display:flex; flex-wrap:wrap; gap:8px; margin-bottom:14px; }
+    .pill { font-size:11px; padding:5px 10px; border-radius:999px; border:1px solid var(--border-soft); background:rgba(8,11,20,0.9); color:var(--muted); }
+
+    section { margin-bottom:40px; }
+    .section-header { display:flex; justify-content:space-between; flex-wrap:wrap; margin-bottom:12px; }
+    .section-header h2 { font-size:18px; }
+    .section-header p { font-size:13px; color:var(--muted); max-width:420px; }
+
+    .timeline { border-radius:var(--radius-xl); background:rgba(8,11,20,0.96); border:1px solid var(--border-soft); padding:14px; }
+    .timeline-item { padding:8px 0; border-bottom:1px solid rgba(255,255,255,0.06); }
+    .timeline-item:last-child { border-bottom:none; }
+    .timeline-title { font-size:14px; font-weight:500; }
+    .timeline-sub { font-size:12px; color:var(--muted); }
+
+    .tabs { border-radius:var(--radius-xl); background:rgba(8,11,20,0.96); border:1px solid var(--border-soft); overflow:hidden; box-shadow:var(--shadow-soft); }
+    .tab-nav { display:flex; flex-wrap:wrap; border-bottom:1px solid rgba(255,255,255,0.08); }
+    .tab-button { flex:1 0 120px; padding:10px; background:none; border:none; color:var(--muted); cursor:pointer; font-size:11px; text-transform:uppercase; letter-spacing:.12em; }
+    .tab-button.active { color:#fff; background:rgba(5,8,18,0.9); }
+    .tab-content { display:none; padding:14px; font-size:13px; }
+    .tab-content.active { display:block; }
+
+    .option-list { display:grid; grid-template-columns:repeat(auto-fit,minmax(220px,1fr)); gap:12px; }
+    .option-card { padding:10px; border-radius:var(--radius-lg); border:1px solid var(--border-soft); background:#070a13; }
+    .option-title-row { display:flex; justify-content:space-between; margin-bottom:4px; }
+    .option-title { font-size:13px; font-weight:500; }
+    .option-tag { font-size:11px; border:1px solid var(--border-soft); padding:2px 6px; border-radius:999px; color:var(--muted); }
+    .option-text { font-size:12px; color:var(--muted); }
+
+    table { width:100%; border-collapse:collapse; margin-top:8px; font-size:12px; }
+    th,td { padding:6px 4px; border-bottom:1px solid rgba(255,255,255,0.08); }
+    th { font-size:11px; color:var(--muted); text-transform:uppercase; letter-spacing:.12em; }
+    td.amount { text-align:right; }
+
+    footer { margin-top:28px; padding-top:14px; border-top:1px solid rgba(255,255,255,0.12); font-size:12px; color:var(--muted); display:flex; justify-content:space-between; flex-wrap:wrap; }
+  </style>
+</head>
+<body>
+<div class="page">
+
+  <!-- HEADER -->
+  <header>
+    <div>
+      <div class="logo-title">Michi's JGA – Malta</div>
+      <div class="logo-sub">30. Juli – 2. August 2026</div>
+    </div>
+    <nav>
+      <ul>
+        <li><a href="#programm">Programm</a></li>
+        <li><a href="#register">Optionen</a></li>
+        <li><a href="#budget">Budget</a></li>
+        <li><a href="#facts">Facts</a></li>
+      </ul>
+    </nav>
+  </header>
+
+  <!-- HERO -->
+  <section class="hero">
+    <div class="hero-kicker">Überblick</div>
+    <h1><span>Michi's Junggesellenabschied</span></h1>
+    <p class="hero-text">
+      Fixes Datum. Drei Villen. Zwei Daydrinking-Spots. Mehrere Clubs.  
+      Dieser Überblick reicht – Details googelt jeder bei Bedarf selbst.
+    </p>
+    <div class="pill-row">
+      <div class="pill">Do–So</div>
+      <div class="pill">Private Villa</div>
+      <div class="pill">Programmstart: Freitag</div>
+      <div class="pill">Paceville Nearby</div>
+    </div>
+  </section>
+
+  <!-- PROGRAMM -->
+  <section id="programm">
+    <div class="section-header">
+      <h2>Grobprogramm</h2>
+      <p>Nur das Wesentliche – ohne Detailplanung.</p>
+    </div>
+    <div class="timeline">
+      <div class="timeline-item">
+        <div class="timeline-title">Donnerstag – Anreise</div>
+        <div class="timeline-sub">Villa beziehen, einkaufen, kurze Runde Paceville möglich. Offizieller Start aber erst Freitag.</div>
+      </div>
+      <div class="timeline-item">
+        <div class="timeline-title">Freitag – Start</div>
+        <div class="timeline-sub">Tagsüber easy. Ab Nachmittag/Abend Daydrinking & Ausgang.</div>
+      </div>
+      <div class="timeline-item">
+        <div class="timeline-title">Samstag – Main Night</div>
+        <div class="timeline-sub">Lockerer Tag, abends größter Club-/Open-Air-Abend.</div>
+      </div>
+      <div class="timeline-item">
+        <div class="timeline-title">Sonntag – Rückflug</div>
+        <div class="timeline-sub">Je nach Flugzeit noch Pool/Kaffee → Heimreise.</div>
+      </div>
+    </div>
+  </section>
+
+  <!-- OPTIONS -->
+  <section id="register">
+    <div class="section-header">
+      <h2>Optionen</h2>
+      <p>Komprimiert dargestellt. Details bei Bedarf einfach googeln.</p>
+    </div>
+
+    <div class="tabs">
+      <div class="tab-nav">
+        <button class="tab-button active" data-tab="villen">Villen</button>
+        <button class="tab-button" data-tab="essen">Essen</button>
+        <button class="tab-button" data-tab="clubs">Clubs</button>
+        <button class="tab-button" data-tab="daytime">Daytime</button>
+        <button class="tab-button" data-tab="budget-tab">Budget</button>
+      </div>
+
+      <!-- VILLEN -->
+      <div class="tab-content active" id="villen">
+        <div class="option-list">
+
+          <div class="option-card">
+            <div class="option-title-row">
+              <div class="option-title">LOW – Villa Alexandra</div>
+              <div class="option-tag">Mellieħa</div>
+            </div>
+            <div class="option-text">
+              Preis: ca. 3’900 CHF total.<br>
+              Link:<br>
+              <a href="https://www.luxuryvillasmalta.com/villa/10124" target="_blank" style="color:#ffbfa0;">luxuryvillasmalta.com/villa/10124</a>
+            </div>
+          </div>
+
+          <div class="option-card">
+            <div class="option-title-row">
+              <div class="option-title">MID – Villa Madliena Hills</div>
+              <div class="option-tag">Swieqi</div>
+            </div>
+            <div class="option-text">
+              Preis: ca. 5’566 CHF total.<br>
+              Link:<br>
+              <a href="https://www.airbnb.com/l/gi0OQMxv" target="_blank" style="color:#ffbfa0;">airbnb.com/l/gi0OQMxv</a>
+            </div>
+          </div>
+
+          <div class="option-card">
+            <div class="option-title-row">
+              <div class="option-title">HIGH – Villa Irina</div>
+              <div class="option-tag">Swieqi</div>
+            </div>
+            <div class="option-text">
+              Preis: ca. 7’780 CHF total.<br>
+              Link:<br>
+              <a href="https://www.airbnb.com/l/CymqWKD6" target="_blank" style="color:#ffbfa0;">airbnb.com/l/CymqWKD6</a>
+            </div>
+          </div>
+
+        </div>
+      </div>
+
+      <!-- ESSEN -->
+      <div class="tab-content" id="essen">
+        <div class="option-list">
+          <div class="option-card">
+            <div class="option-title-row"><div class="option-title">Caviar & Bull</div></div>
+            <div class="option-text">Fine Dining, Meerblick.</div>
+          </div>
+          <div class="option-card">
+            <div class="option-title-row"><div class="option-title">Wigi’s Kitchen</div></div>
+            <div class="option-text">Beliebt, klein & gut.</div>
+          </div>
+          <div class="option-card">
+            <div class="option-title-row"><div class="option-title">Quadro Brasserie</div></div>
+            <div class="option-text">Stylisch, am Wasser.</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- CLUBS -->
+      <div class="tab-content" id="clubs">
+        <div class="option-list">
+          <div class="option-card">
+            <div class="option-title-row"><div class="option-title">Gianpula Village</div></div>
+            <div class="option-text">Größtes Open-Air der Insel.</div>
+          </div>
+          <div class="option-card">
+            <div class="option-title-row"><div class="option-title">Sky Club (Paceville)</div></div>
+            <div class="option-text">Größter Club in St. Julian’s.</div>
+          </div>
+          <div class="option-card">
+            <div class="option-title-row"><div class="option-title">Havana Club</div></div>
+            <div class="option-text">Charts/HipHop, sehr voll.</div>
+          </div>
+          <div class="option-card">
+            <div class="option-title-row"><div class="option-title">Toy Room</div></div>
+            <div class="option-text">Stylische Clubbrand.</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- DAYTIME -->
+      <div class="tab-content" id="daytime">
+        <div class="option-list">
+          <div class="option-card">
+            <div class="option-title-row"><div class="option-title">MedAsia Playa</div></div>
+            <div class="option-text">Pool, Musik, Drinks.</div>
+          </div>
+          <div class="option-card">
+            <div class="option-title-row"><div class="option-title">Café del Mar</div></div>
+            <div class="option-text">Sunset & Pool.</div>
+          </div>
+          <div class="option-card">
+            <div class="option-title-row"><div class="option-title">Boat Trip (optional)</div></div>
+            <div class="option-text">Blue Lagoon / Comino.</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- BUDGET -->
+      <div class="tab-content" id="budget-tab">
+        <p>Grobe Range pro Person (inkl. Flug, kann variieren):</p>
+        <table>
+          <tr><th>Variante</th><th>Beschreibung</th><th style="text-align:right;">CHF</th></tr>
+          <tr><td>Low</td><td>Günstige Villa, smarte Auswahl</td><td class="amount">1’300–1’550</td></tr>
+          <tr><td>Mid</td><td>Mittlere Villa, 1–2 Daydrinking-Spots</td><td class="amount">1’550–1’800</td></tr>
+          <tr><td>High</td><td>Premium-Villa, mehr „Gönn dir“</td><td class="amount">1’900–2’300</td></tr>
+        </table>
+      </div>
+
+    </div>
+  </section>
+
+  <!-- FACTS -->
+  <section id="facts">
+    <div class="section-header">
+      <h2>Facts</h2>
+      <p>Was fix ist – und was flexibel bleibt.</p>
+    </div>
+
+    <div class="timeline">
+      <div class="timeline-item">
+        <div class="timeline-title">Datum fix</div>
+        <div class="timeline-sub">30.07.–02.08.2026</div>
+      </div>
+      <div class="timeline-item">
+        <div class="timeline-title">Villa per Abstimmung</div>
+        <div class="timeline-sub">Low / Mid / High – Entscheidung separat.</div>
+      </div>
+      <div class="timeline-item">
+        <div class="timeline-title">Start ab Freitag</div>
+        <div class="timeline-sub">Donnerstag ist Anreise & Ankommen.</div>
+      </div>
+      <div class="timeline-item">
+        <div class="timeline-title">Extras</div>
+        <div class="timeline-sub">Wird nicht ausgeschrieben – klären wir vor Ort.</div>
+      </div>
+    </div>
+  </section>
+
+  <!-- FOOTER -->
+  <footer>
+    <div>© Michi’s JGA – Malta</div>
+    <div>Wichtigstes Ziel: feiern.</div>
+  </footer>
+
+</div>
+
+<script>
+  const tabButtons = document.querySelectorAll('.tab-button');
+  const tabContents = document.querySelectorAll('.tab-content');
+  tabButtons.forEach(btn=>{
+    btn.addEventListener('click',()=>{
+      const id = btn.dataset.tab;
+      tabButtons.forEach(b=>b.classList.remove('active'));
+      tabContents.forEach(c=>c.classList.remove('active'));
+      btn.classList.add('active');
+      document.getElementById(id).classList.add('active');
+    });
+  });
+</script>
+</body>
+</html>

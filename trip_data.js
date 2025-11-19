@@ -7,37 +7,33 @@ window.tripDataMap = {
             "<strong>✈️ Flights:</strong> <a href=\"https://www.google.com/travel/flights/s/KVk9aCzjjiKw5MhDA\" target=\"_blank\" class=\"text-blue-600 hover:underline\">Group Booking Link (LIS)</a>",
             "<strong>Group Size:</strong> 12 people"
         ],
-        "mapLink": "https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d99585.82815341797!2d-9.22772304865925!3d38.74368828603518!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0xd19331a61e4f33b%3A0x400ebbde49036d0!2sLisbon%2C%20Portugal!5e0!3m2!1sen!2sch!4v1680000000000!5m2!1sen!2sch",
+        "mapLink": "https://www.google.com/maps/d/embed?mid=1XnELr1wV5ROT7IbgZr4X7imTEg8dWeo&ehbc=2E312F",
         "villas": [
             {
-                "name": "Apartment 1",
-                "description": "",
+                "name": "Huge Group Apartment (19 Beds)",
+                "description": "9 Schlafzimmer · 19 Betten · 9 Badezimmer",
                 "price": 4000,
-                "link": "#"
+                "link": "https://www.airbnb.ch/rooms/32309333",
+                "airbnbId": "32309333"
             },
             {
-                "name": "Apartment 2",
-                "description": "",
-                "price": 3000,
-                "link": "#"
-            },
-            {
-                "name": "Apartment 3",
-                "description": "",
-                "price": 2500,
-                "link": "#"
+                "name": "Large Studio Loft (10 Beds)",
+                "description": "Studio · 10 Betten · 2 Badezimmer",
+                "price": 2100,
+                "link": "https://www.airbnb.ch/rooms/802114826393812900",
+                "airbnbId": "802114826393812900"
             }
         ],
         "venues": [
             {
-                "name": "Beach Club",
-                "link": "#",
-                "desc": "Sunset party target"
+                "name": "Incognito",
+                "link": "https://share.google/qMBbStKWhbiVQy20i",
+                "desc": "Night Club"
             },
             {
-                "name": "Main Club",
-                "link": "#",
-                "desc": "Night club target"
+                "name": "Dock's Club",
+                "link": "https://share.google/4mRPDId0foHOaRfYr",
+                "desc": "Night club"
             }
         ],
         "activities": [
@@ -192,6 +188,16 @@ window.tripDataMap = {
                 "desc": "Castle club"
             },
             {
+                "name": "Bal Harbour Club",
+                "link": "https://balharbour.it/pool-party/",
+                "desc": "Pool Party"
+            },
+            {
+                "name": "Twiga Club",
+                "link": "https://twigaworld.com/twiga-porto-cervo/#club",
+                "desc": "Flavio Briatore club"
+            },
+            {
                 "name": "Alternative: Blu Beach Club",
                 "link": "https://en.blubeach.club/club",
                 "desc": "Another potential venue option."
@@ -214,13 +220,6 @@ window.tripDataMap = {
                 "date": "Thursday, 30 July",
                 "subtitle": "THE ARRIVAL",
                 "events": [
-                    {
-                        "start": 720,
-                        "end": 780,
-                        "title": "New Event",
-                        "desc": "Description here...",
-                        "type": "chill"
-                    },
                     {
                         "start": 1020,
                         "end": 1075,

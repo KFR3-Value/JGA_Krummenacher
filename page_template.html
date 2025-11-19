@@ -102,7 +102,7 @@
         <main>
             <div id="agenda" class="tab-content active">
                 <div class="mb-4 bg-blue-50 border border-blue-200 text-blue-800 px-4 py-3 rounded relative text-sm">
-                    <strong>Editable:</strong> Click text to edit. Hover block to change time/delete. Use "+ Add Event" below.
+                    <strong>Editable:</strong> Click text to edit. Hover block to change time/delete/change category. Use "+ Add Event" below.
                 </div>
                 <div id="agendaGrid" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6"></div>
             </div>
@@ -323,7 +323,7 @@
                     b.className = 'event-block '+(ev.type?ev.type+'-slot':'');
                     b.style.top = `calc(${ev.start} * var(--minute-height))`;
                     b.style.height = `calc(${dur} * var(--minute-height))`;
-                    b.innerHTML=`<div class="event-controls"><button class="ctrl-btn" onclick="changeTime(${di},${ei})">🕒</button><button class="ctrl-btn text-red-600" onclick="deleteEvent(${di},${ei})">🗑️</button></div>
+                    b.innerHTML=`<div class="event-controls"><button class="ctrl-btn" onclick="changeTime(${di},${ei})">🕒</button><button class="ctrl-btn" onclick="changeEventType(${di},${ei})">🎨</button><button class="ctrl-btn text-red-600" onclick="deleteEvent(${di},${ei})">🗑️</button></div>
                                  <h3 contenteditable="true" onblur="updateEvent(${di},${ei},'title',this.innerText)" class="font-bold text-xs leading-tight outline-none hover:bg-gray-50 cursor-text">${formatTime(ev.start)} — ${ev.title}</h3>
                                  <p contenteditable="true" onblur="updateEvent(${di},${ei},'desc',this.innerText)" class="text-xs text-gray-600 mt-1 outline-none hover:bg-gray-50 cursor-text min-h-[1em]">${ev.desc||''}</p>`;
                     tl.appendChild(b);
@@ -362,6 +362,20 @@
             if(s!==null&&e!==null&&e>s){ ev.start=s; ev.end=e; saveToBrowser(); renderAgenda(); } else alert("Invalid");
         }
         function updateEvent(di,ei,k,v){ currentTrip.days[di].events[ei][k]=v; saveToBrowser(); }
+        
+        function changeEventType(di, ei) {
+            const ev = currentTrip.days[di].events[ei];
+            const types = ['party', 'travel', 'chill', 'food'];
+            const newType = prompt(`Change category for: ${ev.title}\n\nEnter one of the following types:\n- party (Yellow)\n- travel (Blue)\n- chill (Green)\n- food (Red)\n\n(Current: ${ev.type})`);
+            
+            if (newType && types.includes(newType.toLowerCase())) {
+                ev.type = newType.toLowerCase();
+                saveToBrowser();
+                renderAgenda();
+            } else if (newType !== null) {
+                alert(`Invalid type. Please enter one of: ${types.join(', ')}`);
+            }
+        }
 
         /* --- STORAGE --- */
         function saveToBrowser(){ localStorage.setItem('tripData_save_'+currentKey, JSON.stringify(currentTrip)); const b=document.getElementById('btn-save-local'); if(b){ b.innerText="✅ Saved!"; setTimeout(()=>b.innerText="💾 Save Changes",1000); } }
